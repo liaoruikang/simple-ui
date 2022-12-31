@@ -1,7 +1,6 @@
 import SInput from './input'
-import SAlert from './alert'
 
-const plugins = [SInput, SAlert]
+const plugins = [SInput]
 
 const SimpleUi = {
   install(app) {
@@ -11,6 +10,9 @@ const SimpleUi = {
   },
 }
 
+const install = SimpleUi.install
+
 export default SimpleUi
 
-export { SInput, SAlert }
+export { SInput }
+export { install }

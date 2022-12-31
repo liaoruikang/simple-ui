@@ -1,6 +1,5 @@
-const path = require('path')
-const { outDir } = require('./paths')
-
+import path from 'path'
+import { outDir } from './paths.js'
 const buildConfig = {
   esm: {
     module: 'ESNext',
@@ -26,4 +25,4 @@ const buildConfig = {
   },
 }
 
-module.exports = buildConfig
+export default buildConfig

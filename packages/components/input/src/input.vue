@@ -20,4 +20,6 @@ export default defineComponent({
   },
 })
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+@import '@simple-ui/theme-chalk/src/input.less';
+</style>

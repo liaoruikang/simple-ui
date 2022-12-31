@@ -1,16 +1,18 @@
-const { src, dest, series } = require('gulp')
-const {
+import gulp from 'gulp'
+import {
   parse,
   compileTemplate,
   compileStyle,
   compileScript,
   rewriteDefault,
-} = require('vue/compiler-sfc')
-const { withTaskName, run } = require('../../build/utils')
-const fs = require('fs')
-const path = require('path')
-const { buildPackages } = require('../../build/packages')
-const less = require('gulp-less')
+} from 'vue/compiler-sfc'
+import { withTaskName, run, withDirname } from '../../build/utils/index.js'
+import fs from 'fs'
+import path from 'path'
+import { buildPackages } from '../../build/packages.js'
+import less from 'gulp-less'
+const { src, dest, series } = gulp
+const __dirname = withDirname(import.meta.url)
 
 const cacheDir = []
 
@@ -37,6 +39,7 @@ function compilerVue(dirname, name) {
       id: scopeId,
       filename: name,
     })
+
     codeList.push(rewriteDefault(content, `__sfc_${no_suffix_name}__`))
     codeList.push(`__sfc_${no_suffix_name}__.__scopeId='${scopeId}'`)
     codeList.push(code)
@@ -106,7 +109,7 @@ function start() {
     const filename = fs.readdirSync(__dirname)
     function getFileCount(dirname, names) {
       const folder = names.filter(name => name.indexOf('.') == -1)
-      const files = names.filter(name => name.match(/\.vue/g))
+      const files = names.filter(name => name.match(/\.vue/))
       if (folder.length) {
         folder.forEach(name => {
           const dir = path.resolve(dirname, name)
@@ -120,7 +123,7 @@ function start() {
     let count = 0
     function getFile(dirname, names) {
       const folder = names.filter(name => name.indexOf('.') == -1)
-      const files = names.filter(name => name.match(/\.vue/g))
+      const files = names.filter(name => name.match(/\.vue/))
       if (folder.length) {
         folder.forEach(name => {
           const dir = path.resolve(dirname, name)
@@ -138,7 +141,8 @@ function start() {
 }
 
 function clearCache() {
-  return new Promise(resolve => {
+  return new Promise(async resolve => {
+    await run('rd /S /Q dist', __dirname)
     cacheDir.forEach(async (dir, index) => {
       await run(`del /q ${dir.name}`, dir.dirname)
       if (index == cacheDir.length - 1) resolve(), (cacheDir.length = 0)
@@ -146,7 +150,7 @@ function clearCache() {
   })
 }
 
-exports.default = series(
+export default series(
   withTaskName('compilerVue', start),
   withTaskName('buildVue', buildPackages(__dirname, 'components')),
   withTaskName('clearCache', clearCache)

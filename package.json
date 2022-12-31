@@ -10,17 +10,19 @@
     "dist"
   ],
   "type": "module",
-  "main": "./dist/lib/components/index.js",
-  "module": "./dist/es/components/index.js",
+  "main": "./dist/lib/components/index.cjs",
+  "module": "./dist/es/components/index.mjs",
   "exports": {
     ".": {
-      "require": "./dist/lib/components/index.js",
-      "import": "./dist/es/components/index.js"
+      "import": "./dist/es/components/index.mjs",
+      "require": "./dist/lib/components/index.cjs"
     }
   },
   "keywords": [
     "vue",
     "vue3",
+    "simple-ui",
+    "simple",
     "ui",
     "html",
     "css",
@@ -41,6 +43,7 @@
     "gulp-babel": "8.0.0-beta.2",
     "gulp-clean-css": "^4.3.0",
     "gulp-less": "^5.0.0",
+    "gulp-rename": "^2.0.0",
     "gulp-replace": "^1.1.4",
     "gulp-uglify": "^3.0.2",
     "less": "^4.1.3",

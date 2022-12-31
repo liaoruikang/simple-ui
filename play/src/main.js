@@ -1,8 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 
-import SimpleUi, { SAlert } from '../../dist/es/components'
-console.log(SAlert)
+import SimpleUi from '../../dist/es/components/index.min.js'
 const app = createApp(App)
 
 app.use(SimpleUi)

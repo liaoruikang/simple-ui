@@ -1,6 +1,5 @@
 <template>
   <s-input v-model="value"></s-input>
-  <s-alert></s-alert>
   <p>{{ value }}</p>
 </template>
 <script setup>

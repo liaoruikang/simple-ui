@@ -1,8 +1,11 @@
-const { series, src, dest } = require('gulp')
-const less = require('gulp-less')
-const autoprefixer = require('gulp-autoprefixer')
-const cleanCss = require('gulp-clean-css')
-const path = require('path')
+import gulp from 'gulp'
+import less from 'gulp-less'
+import autoprefixer from 'gulp-autoprefixer'
+import cleanCss from 'gulp-clean-css'
+import path from 'path'
+import { run, withDirname, withTaskName } from '../../build/utils/index.js'
+const { series, src, dest } = gulp
+const __dirname = withDirname(import.meta.url)
 
 function compile() {
   return src(path.resolve(__dirname, './src/*.less'))
@@ -22,4 +25,16 @@ function copyfullStyle() {
   )
 }
 
-exports.default = series(compile, copyfont, copyfullStyle)
+function clearCache() {
+  return new Promise(async resolve => {
+    await run('rd /S /Q dist', __dirname)
+    resolve()
+  })
+}
+
+export default series(
+  withTaskName(`compileCss`, compile),
+  withTaskName(`copyfont`, copyfont),
+  withTaskName(`copyfullStyle`, copyfullStyle),
+  withTaskName(`clearCache:${__dirname}`, clearCache)
+)
