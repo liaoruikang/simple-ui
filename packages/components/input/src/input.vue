@@ -2,7 +2,7 @@
   <div
     class="s-input"
     :style="{
-      height: !isNaN(height) ? height + 'px' : height,
+      height: !isNaN(height) ? height + 'px' : height
     }"
   >
     <input
@@ -41,11 +41,11 @@ export default defineComponent({
     return {
       value,
       oninput,
-      emit,
+      emit
     }
-  },
+  }
 })
 </script>
-<style lang="less" scoped>
-@import '@simple-ui/theme-chalk/src/input/input.less';
+<style lang="scss" scoped>
+@use '@simple-ui/theme-chalk/src/input';
 </style>
