@@ -2,7 +2,8 @@
   "name": "@simple-ui/play",
   "private": true,
   "scripts": {
-    "dev": "vite --open"
+    "dev": "vite --open",
+    "build": "vite build"
   },
   "license": "ISC",
   "devDependencies": {

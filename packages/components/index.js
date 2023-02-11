@@ -1,6 +1,12 @@
+import version from './version'
 import SInput from './input'
+import STimeline from './timeline'
 
-const plugins = [SInput]
+export { SInput }
+export { STimeline }
+export { version }
+
+const plugins = [SInput, STimeline]
 
 const SimpleUi = {
   install(app) {
@@ -8,11 +14,10 @@ const SimpleUi = {
       app.use(plugin)
     })
   },
+  version,
 }
 
 const install = SimpleUi.install
 
-export default SimpleUi
-
-export { SInput }
 export { install }
+export default SimpleUi

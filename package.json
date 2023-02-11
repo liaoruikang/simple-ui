@@ -3,8 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "play": "pnpm -C play dev",
-    "build": "gulp -f build/gulpfile.js"
+    "play": "pnpm run -C play dev",
+    "build": "gulp -f build/gulpfile.js",
+    "play:build": "pnpm run -C play build",
+    "doc:dev": "pnpm run -C docs dev",
+    "doc:build": "pnpm run -C docs build"
   },
   "files": [
     "dist"
@@ -52,6 +55,7 @@
   },
   "dependencies": {
     "@simple-ui/components": "workspace:^1.0.0",
+    "@simple-ui/hooks": "workspace:^1.0.0",
     "@simple-ui/theme-chalk": "workspace:^1.0.0",
     "@simple-ui/utils": "workspace:^1.0.0"
   }

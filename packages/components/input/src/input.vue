@@ -1,25 +1,51 @@
 <template>
-  <input type="text" class="simple-input" v-model="value" @input="onInput" />
+  <div
+    class="s-input"
+    :style="{
+      height: !isNaN(height) ? height + 'px' : height,
+    }"
+  >
+    <input
+      ref="input"
+      class="s-input_inner"
+      v-model="value"
+      :placeholder="placeholder"
+      :disabled="disabled"
+      @input="oninput"
+      type="text"
+      @change="emit('change', value)"
+    />
+  </div>
 </template>
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { inputProps, inputEmits } from './inputConfig'
 export default defineComponent({
-  name: 's-input',
   props: inputProps,
   emits: inputEmits,
-  setup(props, { emit }) {
-    const value = ref(props.modelValue)
-    const onInput = () => {
+  name: 's-input',
+  setup({ modelValue }, { emit }) {
+    const value = ref(modelValue)
+    const input = ref(null)
+
+    onMounted(() => {
+      console.log(input)
+    })
+
+    const oninput = () => {
       emit('update:modelValue', value.value)
+      emit('input', value.value)
+      setTimeout(() => {}, 300)
     }
+
     return {
-      onInput,
       value,
+      oninput,
+      emit,
     }
   },
 })
 </script>
 <style lang="less" scoped>
-@import '@simple-ui/theme-chalk/src/input.less';
+@import '@simple-ui/theme-chalk/src/input/input.less';
 </style>

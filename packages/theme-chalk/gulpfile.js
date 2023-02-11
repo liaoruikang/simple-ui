@@ -8,7 +8,7 @@ const { series, src, dest } = gulp
 const __dirname = withDirname(import.meta.url)
 
 function compile() {
-  return src(path.resolve(__dirname, './src/*.less'))
+  return src(path.resolve(__dirname, './src/**/*.less'))
     .pipe(less())
     .pipe(cleanCss())
     .pipe(autoprefixer())
@@ -34,6 +34,9 @@ function clearCache() {
 
 export default series(
   withTaskName(`compileCss`, compile),
+  withTaskName(`compileLess`, () => {
+    return src(path.resolve(__dirname, './src/**/*.less')).pipe(dest('./dist/less'))
+  }),
   withTaskName(`copyfont`, copyfont),
   withTaskName(`copyfullStyle`, copyfullStyle),
   withTaskName(`clearCache:${__dirname}`, clearCache)

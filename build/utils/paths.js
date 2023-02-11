@@ -13,4 +13,7 @@ const projectRoot = path.resolve(__dirname, '../../')
 
 const outDir = path.resolve(projectRoot, './dist')
 
-export { projectRoot, outDir }
+const versionEsDir = path.resolve(outDir, 'es/components/version.mjs')
+const versionLibDir = path.resolve(outDir, 'lib/components/version.cjs')
+
+export { projectRoot, outDir, versionEsDir, versionLibDir }

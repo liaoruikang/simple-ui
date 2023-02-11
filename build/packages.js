@@ -30,7 +30,7 @@ const buildPackages = (dirname, name) => {
             .pipe(
               replace(
                 /exports.default=_default;/g,
-                'exports.default=_default;exports.install=_default.install'
+                'exports.default=_default;exports.install=_default.install;'
               )
             )
             .pipe(dest(output))

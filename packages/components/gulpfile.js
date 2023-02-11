@@ -65,12 +65,11 @@ function compilerVue(dirname, name) {
               dest(dirname).addListener('finish', () => {
                 const style = fs.readFileSync(path.resolve(dirname, no_suffix_name + '.css'))
                 const styleDOM = `
-              const el = document.createElement('style')
+              ;const el = document.createElement('style')
               el.innerHTML =  \`${style.toString()}\`
               document.body.append(el);
             `
                 codeList.push(styleDOM)
-
                 // 删除css文件
                 run(`del /q ${no_suffix_name}.css`, dirname)
                 run(`del /q ${no_suffix_name}.${lang}`, dirname)
