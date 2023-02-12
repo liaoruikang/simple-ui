@@ -1,4 +1,12 @@
-$s-main-color: rgb(74, 176, 223);
-$s-border-color: #e6e6e6;
-$s-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.1);
-$s-radius: 4px;
+@use 'sass:map';
+
+$colors: () !default;
+$colors: map.merge((
+  primary:#B9F3FC,
+  success:#B3FFAE,
+  warning: #FECD70, 
+  error: #EB7878, 
+  info:#F0EEED
+),$colors);
+
+

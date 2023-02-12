@@ -1,17 +1,18 @@
 <template>
   <div class="app_container">
-    <s-timeline
+    <!-- <s-timeline
       v-model="value"
       value-format="yyyy-MM-dd hh:mm:ss"
       format="hh:mm:ss"
       infinite
-    ></s-timeline>
+    ></s-timeline> -->
+    <s-input v-model="value"></s-input>
     {{ value }}
   </div>
 </template>
 <script setup>
 import { ref } from 'vue'
-const value = ref(new Date())
+const value = ref('')
 </script>
 <style lang="less">
 * {

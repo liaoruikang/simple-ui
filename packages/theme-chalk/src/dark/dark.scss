@@ -1,0 +1,23 @@
+@use 'sass:map';
+
+$themes: () !default;
+$themes: map.merge(
+  (
+    light: (
+      bg-color: #fff,
+      bd-color: #dadada,
+      text-color: #606266
+    ),
+    dark: (
+      bg-color: #141414,
+      bd-color: #4c4d4f,
+      text-color: #ffffff70
+    )
+  ),
+  $themes
+);
+
+@mixin theme {
+  @each $theme-key, $theme-value in $themes {
+  }
+}
