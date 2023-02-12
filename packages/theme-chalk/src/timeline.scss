@@ -7,7 +7,7 @@
   border: 1px solid $s-border-color;
   overflow: hidden;
   cursor: grab;
-  border-radius: $s-main-radius;
+  border-radius: $s-radius;
   user-select: none;
   -webkit-user-select: none;
   &:active {

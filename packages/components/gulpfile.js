@@ -11,6 +11,9 @@ import fs from 'fs'
 import path from 'path'
 import { buildPackages } from '../../build/packages.js'
 import less from 'gulp-less'
+import dartSass from 'sass'
+import gulpSass from 'gulp-sass'
+const sass = gulpSass(dartSass)
 const { src, dest, series } = gulp
 const __dirname = withDirname(import.meta.url)
 
@@ -61,6 +64,30 @@ function compilerVue(dirname, name) {
         if (lang == 'less') {
           src(path.resolve(dirname, `${no_suffix_name}.${lang}`))
             .pipe(less())
+            .pipe(
+              dest(dirname).addListener('finish', () => {
+                const style = fs.readFileSync(path.resolve(dirname, no_suffix_name + '.css'))
+                const styleDOM = `
+              ;const el = document.createElement('style')
+              el.innerHTML =  \`${style.toString()}\`
+              document.body.append(el);
+            `
+                codeList.push(styleDOM)
+                // 删除css文件
+                run(`del /q ${no_suffix_name}.css`, dirname)
+                run(`del /q ${no_suffix_name}.${lang}`, dirname)
+
+                fs.writeFileSync(path.resolve(dirname, no_suffix_name + '.js'), codeList.join('\n'))
+                cacheDir.push({
+                  dirname,
+                  name: no_suffix_name + '.js',
+                })
+                resolve()
+              })
+            )
+        } else if (lang == 'scss') {
+          src(path.resolve(dirname, `${no_suffix_name}.${lang}`))
+            .pipe(sass.sync())
             .pipe(
               dest(dirname).addListener('finish', () => {
                 const style = fs.readFileSync(path.resolve(dirname, no_suffix_name + '.css'))
