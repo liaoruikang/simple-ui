@@ -1,22 +1,124 @@
-// @use './mixins/config';
-// @use './common/vars';
+@use 'sass:map';
+@use './common/vars';
+@use './function/function' as f;
+@use './mixins/mixins' as m;
+@use './mixins/var';
 
-// .#{config.$namespace}-input {
-//   display: inline-block;
-//   width: 100%;
-//   &_inner {
-//     width: 100%;
-//     height: 100%;
-//     padding: 2px 5px;
-//     border: 1px solid vars.$s-border-color;
-//     border-radius: 3px;
-//     box-sizing: border-box;
-//     transition: border 0.3s;
-//   }
-//   &_inner[disabled] {
-//     cursor: not-allowed;
-//   }
-//   &_inner:focus {
-//     border: 1px solid vars.$s-main-color;
-//   }
-// }
+// 写入变量
+
+@include m.b('input') {
+  & {
+    @include var.set_css_var(map.get(vars.$var-list, input));
+  }
+
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+  height: f.get_css_var('input-height');
+  background-color: f.get_css_var('bg-color');
+  line-height: f.get_css_var('input-height');
+  border-radius: f.get_css_var('bd-radius');
+
+  @include m.transition(background-color color);
+
+  @include m.b(&, $element: 'wrapper', $namespace: true) {
+    display: flex;
+    align-items: center;
+    height: inherit;
+    flex: 1;
+    border-radius: inherit;
+
+    @include m.border_shadow();
+
+    @include m.transition(box-shadow, $time: 0.5s);
+
+    &:hover {
+      @include m.border_shadow($color: f.get_css_var('bd-hover-color'));
+    }
+
+    &:focus-within {
+      @include m.border_shadow($color: f.get_css_var('bd-focus-color'));
+    }
+
+    &.is-disabled {
+      background-color: f.get_css_var('disabled-bg-color');
+      color: f.get_css_var('disabled-text-color');
+
+      @include m.border_shadow();
+    }
+
+    &.is-prepend {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    &.is-append {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  @include m.b(&, $element: 'inner', $namespace: true) {
+    flex: 1;
+    height: 100%;
+    background-color: transparent;
+    border: 0;
+    padding: f.get_css_var('input-padding');
+    color: f.get_css_var('text-color');
+    border-radius: inherit;
+    box-sizing: border-box;
+    outline: 0;
+
+    &[disabled] {
+      cursor: not-allowed;
+    }
+
+    &::-webkit-input-placeholder {
+      color: f.get_css_var('placeholder-text-color');
+    }
+  }
+
+  @include m.b(&, $element: 'prepend', $namespace: true) {
+    background-color: f.get_css_var('prepend-bg-color');
+    padding: f.get_css_var('input-padding');
+    border-radius: inherit;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+    @include m.transition(background-color box-shadow);
+
+    @include m.border_shadow(
+      $orientation: (
+        0: 1px 0 0 0px,
+        1: 0 -1px 0 0px,
+        2: 0 1px 0 0px,
+      )
+    );
+  }
+
+  @include m.b(&, $element: 'append', $namespace: true) {
+    background-color: f.get_css_var('append-bg-color');
+    padding: f.get_css_var('input-padding');
+    border-radius: inherit;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+
+    @include m.transition(background-color box-shadow);
+
+    @include m.border_shadow(
+      $orientation: (
+        0: -1px 0 0 0px,
+        1: 0 -1px 0 0px,
+        2: 0 1px 0 0px,
+      )
+    );
+  }
+
+  @include m.b(&, $element: 'prefix', $namespace: true) {
+    padding-left: 8px;
+  }
+
+  @include m.b(&, $element: 'suffix', $namespace: true) {
+    padding-right: 8px;
+  }
+}

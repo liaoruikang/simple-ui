@@ -1,0 +1,49 @@
+@use 'sass:string';
+@use '../common/config';
+@use '../function/function' as f;
+
+// bem
+@mixin b($block, $element: '', $modifier: '', $namespace: false) {
+  $b: if($namespace, $block, config.$namespace + config.$common-separator + $block);
+  @if $element != '' {
+    $b: $b + config.$element-separator + $element;
+  }
+  @if $modifier != '' {
+    $b: $b + config.$modifier-separator + $modifier;
+  }
+  @if ($namespace) {
+    #{$b} {
+      @content;
+    }
+  } @else {
+    .#{$b} {
+      @content;
+    }
+  }
+}
+
+// 动画
+@mixin transition($arr: null, $time: 0.3s, $mode: cubic-bezier(0.075, 0.82, 0.165, 1)) {
+  @if arr != null {
+    $str: null;
+    @each $value in $arr {
+      $str: $str + $value + ' ' + $mode + ' ' + $time + ',';
+    }
+    transition: string.unquote(string.slice($str, 1, -2));
+  }
+}
+
+// 阴影边框
+@mixin border_shadow(
+  $orientation: (
+    0: 0 0 0 1px,
+  ),
+  $color: f.get_css_var('bd-color'),
+  $mode: inset
+) {
+  $str: null;
+  @each $key, $value in $orientation {
+    $str: $str + $value + ' ' + $color + ' ' + $mode + ',';
+  }
+  box-shadow: string.unquote(string.slice($str, 1, -2));
+}

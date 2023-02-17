@@ -1,0 +1,6 @@
+@use '../common/config';
+@mixin set_css_var($map: ()) {
+  @each $key, $value in $map {
+    --#{config.$namespace}-#{$key}: #{$value};
+  }
+}

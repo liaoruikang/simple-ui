@@ -1,2 +1,3 @@
-@use './input.scss' as *;
-@use './timeline.scss' as *;
+@use './common/init';
+@use './input';
+@use './timeline';

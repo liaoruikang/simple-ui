@@ -2,13 +2,9 @@ export const inputProps = {
   modelValue: {
     type: [Number, String],
   },
-  height: {
-    type: [Number, String],
-    default: 20,
-  },
   placeholder: {
     type: String,
-    default: '',
+    default: '请输入',
   },
   disabled: {
     type: Boolean,

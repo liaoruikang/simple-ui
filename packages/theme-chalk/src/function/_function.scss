@@ -1,0 +1,4 @@
+@use '../common/config';
+@function get_css_var($name) {
+  @return var(--#{config.$namespace}-#{$name});
+}
