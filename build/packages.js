@@ -16,7 +16,14 @@ const buildPackages = (dirname, name) => {
     const outputDist_copy = path.resolve(outDir, config.output.name, name + '_copy')
     return series(
       withTaskName(`build:${dirname}`, () => {
-        const inputs = ['**/*.js', '!es/**', '!lib/**', '!gulpfile.js', '!dist/**/**']
+        const inputs = [
+          '**/*.js',
+          '!es/**',
+          '!lib/**',
+          '!gulpfile.js',
+          '!**/*.test.js',
+          '!dist/**/**',
+        ]
         if (module == 'cjs') {
           // 转换commonjs模块
           return src(inputs)

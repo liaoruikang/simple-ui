@@ -1,5 +1,0 @@
-@use '../function/function' as f;
-body {
-  background-color: f.get_css_var('bg-color');
-  color: f.get_css_var('text-color');
-}

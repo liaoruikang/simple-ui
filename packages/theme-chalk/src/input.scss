@@ -4,6 +4,32 @@
 @use './mixins/mixins' as m;
 @use './mixins/var';
 
+@mixin input {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: f.get_css_var('input-height');
+  background-color: f.get_css_var('bg-color');
+  line-height: f.get_css_var('input-height');
+  border-radius: f.get_css_var('bd-radius');
+
+  @include m.transition(background-color color);
+}
+
+@mixin input_shadow {
+  @include m.border_shadow();
+
+  @include m.transition(box-shadow, $time: 0.5s);
+
+  &:hover {
+    @include m.border_shadow($color: f.get_css_var('bd-hover-color'));
+  }
+
+  &:focus-within {
+    @include m.border_shadow($color: f.get_css_var('bd-focus-color'));
+  }
+}
+
 // 写入变量
 
 @include m.b('input') {
@@ -13,52 +39,37 @@
 
   display: flex;
   align-items: center;
-  overflow: hidden;
-  width: 100%;
-  height: f.get_css_var('input-height');
-  background-color: f.get_css_var('bg-color');
-  line-height: f.get_css_var('input-height');
-  border-radius: f.get_css_var('bd-radius');
 
-  @include m.transition(background-color color);
+  @include input;
 
-  @include m.b(&, $element: 'wrapper', $namespace: true) {
+  @include m.b($prefix: &, $element: 'wrapper') {
     display: flex;
     align-items: center;
     height: inherit;
     flex: 1;
     border-radius: inherit;
 
-    @include m.border_shadow();
+    @include input_shadow;
 
-    @include m.transition(box-shadow, $time: 0.5s);
-
-    &:hover {
-      @include m.border_shadow($color: f.get_css_var('bd-hover-color'));
-    }
-
-    &:focus-within {
-      @include m.border_shadow($color: f.get_css_var('bd-focus-color'));
-    }
-
-    &.is-disabled {
+    @include m.b($prefix: &, $state: disabled) {
       background-color: f.get_css_var('disabled-bg-color');
       color: f.get_css_var('disabled-text-color');
 
       @include m.border_shadow();
     }
 
-    &.is-prepend {
+    @include m.b($prefix: &, $state: prepend) {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
     }
-    &.is-append {
+
+    @include m.b($prefix: &, $state: append) {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
     }
   }
 
-  @include m.b(&, $element: 'inner', $namespace: true) {
+  @include m.b($prefix: &, $element: 'inner') {
     flex: 1;
     height: 100%;
     background-color: transparent;
@@ -78,7 +89,7 @@
     }
   }
 
-  @include m.b(&, $element: 'prepend', $namespace: true) {
+  @include m.b($prefix: &, $element: 'prepend') {
     background-color: f.get_css_var('prepend-bg-color');
     padding: f.get_css_var('input-padding');
     border-radius: inherit;
@@ -96,7 +107,7 @@
     );
   }
 
-  @include m.b(&, $element: 'append', $namespace: true) {
+  @include m.b($prefix: &, $element: 'append') {
     background-color: f.get_css_var('append-bg-color');
     padding: f.get_css_var('input-padding');
     border-radius: inherit;
@@ -114,11 +125,79 @@
     );
   }
 
-  @include m.b(&, $element: 'prefix', $namespace: true) {
+  @include m.b($prefix: &, $element: 'prefix') {
     padding-left: 8px;
   }
 
-  @include m.b(&, $element: 'suffix', $namespace: true) {
+  @include m.b($prefix: &, $element: 'suffix') {
     padding-right: 8px;
+  }
+  @include m.b($prefix: &, $element: 'limit') {
+    color: f.get_css_var('info-color');
+    padding: f.get_css_var('input-padding');
+    font-size: 12px;
+  }
+}
+
+@include m.b('textarea') {
+  & {
+    @include var.set_css_var(map.get(vars.$var-list, input));
+  }
+
+  @include input;
+
+  &.is-disabled {
+    background-color: f.get_css_var('disabled-bg-color');
+    color: f.get_css_var('disabled-text-color');
+  }
+
+  display: flex;
+  height: auto;
+
+  @include m.b($prefix: &, $element: 'inner') {
+    flex: 1;
+    height: f.get_css_var('textarea-height');
+    background-color: transparent;
+    color: f.get_css_var('text-color');
+    border: 0;
+    padding: 5px 8px;
+    border-radius: inherit;
+    line-height: f.get_css_var('textarea-height');
+    outline: 0;
+    resize: vertical;
+
+    @include input_shadow;
+
+    &[disabled] {
+      cursor: not-allowed;
+      resize: none;
+      @include m.border_shadow();
+    }
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(209, 209, 209, 0.5);
+      border-radius: 5px;
+
+      @include m.transition(all);
+    }
+
+    @at-root .dark & {
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(97, 97, 97, 0.5);
+      }
+    }
+  }
+
+  @include m.b($prefix: &, $element: 'limit') {
+    position: absolute;
+    right: 7px;
+    bottom: 0;
+    color: f.get_css_var('info-color');
+    font-size: 12px;
+    pointer-events: none;
   }
 }

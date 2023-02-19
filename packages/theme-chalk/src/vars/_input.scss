@@ -1,4 +1,8 @@
+@use 'sass:color';
+
 $input: (
   input-height: 32px,
   input-padding: 0 8px,
+  textarea-height: 22px,
+  textarea-padding: 5px 8px,
 );

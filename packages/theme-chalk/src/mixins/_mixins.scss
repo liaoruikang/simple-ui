@@ -3,22 +3,27 @@
 @use '../function/function' as f;
 
 // bem
-@mixin b($block, $element: '', $modifier: '', $namespace: false) {
-  $b: if($namespace, $block, config.$namespace + config.$common-separator + $block);
+@mixin b($block: '', $element: '', $modifier: '', $state: '', $prefix: '') {
+  $b: '';
+  @if $block != '' {
+    $b: config.$namespace + config.$common-separator + $block;
+  }
   @if $element != '' {
     $b: $b + config.$element-separator + $element;
   }
   @if $modifier != '' {
     $b: $b + config.$modifier-separator + $modifier;
   }
-  @if ($namespace) {
-    #{$b} {
-      @content;
-    }
+  @if $state != '' {
+    $b: config.$state-prefix + $state;
+  }
+  @if $prefix != '' {
+    $b: $prefix + $b;
   } @else {
-    .#{$b} {
-      @content;
-    }
+    $b: '.' + $b;
+  }
+  #{string.unquote($b)} {
+    @content;
   }
 }
 

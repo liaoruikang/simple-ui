@@ -7,11 +7,11 @@
 $colors: () !default;
 $colors: map.merge(
   (
-    primary: #418adf,
-    success: #b3ffae,
-    warning: #fecd70,
-    error: #eb7878,
-    info: #f0eeed,
+    primary-color: #418adf,
+    success-color: #b3ffae,
+    warning-color: #fecd70,
+    error-color: #eb7878,
+    info-color: #ada7a7,
   ),
   $colors
 );
@@ -19,38 +19,23 @@ $colors: map.merge(
 $theme: () !default;
 $theme: map.merge(
   (
-    light: (
-      bg-color: #ffffff,
-      bd-color: #dcdfe6,
-      text-color: #606266,
-      bd-radius: 4px,
-      bd-focus-color: map.get($colors, primary),
-      bd-hover-color: #c0c4cc,
-      disabled-bg-color: #f5f7fa,
-      disabled-text-color: #e4e7ed,
-      placeholder-text-color: #a8abb2,
-      prepend-bg-color: rgb(238, 238, 238),
-      append-bg-color: rgb(238, 238, 238),
-    ),
-    dark: (
-      bg-color: #141414,
-      bd-color: #4c4d4f,
-      text-color: rgba(255, 255, 255, 0.5),
-      bd-radius: 4px,
-      bd-focus-color: map.get($colors, primary),
-      bd-hover-color: #626466,
-      disabled-bg-color: #262727,
-      disabled-text-color: #8d9095,
-      placeholder-text-color: #8d9095,
-      prepend-bg-color: rgb(56, 56, 56),
-      append-bg-color: rgb(56, 56, 56),
-    ),
+    bg-color: #ffffff,
+    bd-color: #dcdfe6,
+    text-color: #606266,
+    bd-radius: 4px,
+    bd-focus-color: map.get($colors, primary-color),
+    bd-hover-color: #c0c4cc,
+    disabled-bg-color: #f5f7fa,
+    disabled-text-color: #e4e7ed,
+    placeholder-text-color: #a8abb2,
+    prepend-bg-color: rgb(238, 238, 238),
+    append-bg-color: rgb(238, 238, 238),
   ),
   $theme
 );
 
 $var-list: () !default;
-$var-list: map.merge(
+$var-list: map.deep-merge(
   (
     input: vars.$input,
   ),
@@ -58,8 +43,6 @@ $var-list: map.merge(
 );
 
 :root {
-  @include var.set_css_var(map.get($theme, light));
-  &.dark {
-    @include var.set_css_var(map.get($theme, dark));
-  }
+  @include var.set_css_var($theme);
+  @include var.set_css_var($colors);
 }

@@ -1,0 +1,33 @@
+@use 'sass:map';
+@use '../function/function' as f;
+@use '../mixins/mixins' as m;
+@use '../mixins/var';
+
+$theme: () !default;
+$theme: map.merge(
+  (
+    bg-color: #141414,
+    bd-color: #4c4d4f,
+    text-color: rgba(255, 255, 255, 0.5),
+    bd-radius: 4px,
+    bd-hover-color: #626466,
+    disabled-bg-color: #262727,
+    disabled-text-color: #8d9095,
+    placeholder-text-color: #8d9095,
+    prepend-bg-color: rgb(56, 56, 56),
+    append-bg-color: rgb(56, 56, 56),
+  ),
+  $theme
+);
+
+html.dark {
+  @include var.set_css_var($theme);
+}
+
+body {
+  background-color: f.get_css_var('bg-color');
+  color: f.get_css_var('text-color');
+  font-family: f.get_css_var('font-family');
+
+  @include m.transition(background-color);
+}

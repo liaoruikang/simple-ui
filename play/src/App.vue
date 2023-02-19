@@ -1,13 +1,23 @@
 <template>
+  <button @click="change">换肤</button>
   <div class="app_container">
-    <button @click="change">换肤</button>
     <!-- <s-timeline
       v-model="value"
       value-format="yyyy-MM-dd hh:mm:ss"
       format="hh:mm:ss"
       infinite
     ></s-timeline> -->
-    <s-input v-model="value">
+    <s-input
+      v-model="value"
+      :rows="2"
+      :auto-size="{
+        minRows: 0,
+        maxRows: 10,
+      }"
+      @input:lazy="c"
+      show-limit
+      :formatter="value => '￥ ' + value + ' 元'"
+    >
       <template #append>
         <button>测试</button>
       </template>
@@ -20,18 +30,17 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-const value = ref('')
+const value = ref('456"')
+
+const c = val => {
+  // console.log(val)
+}
 
 const change = () => {
   document.documentElement.classList.toggle('dark')
 }
 </script>
-<style lang="less">
-* {
-  margin: 0;
-}
-</style>
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .app_container {
   width: 50%;
   height: 600px;
