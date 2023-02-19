@@ -2,13 +2,13 @@
   <div
     class="s-textarea"
     :class="{
-      'is-disabled': disabled,
+      'is-disabled': disabled
     }"
     v-if="type === 'textarea'"
   >
     <textarea
       class="s-textarea__inner"
-      :value="value"
+      v-model="value"
       :placeholder="placeholder"
       :disabled="disabled"
       :style="autosize_styles"
@@ -31,7 +31,7 @@
       :class="{
         'is-prepend': slot_keys.includes('prepend'),
         'is-append': slot_keys.includes('append'),
-        'is-disabled': disabled,
+        'is-disabled': disabled
       }"
     >
       <span class="s-input__prefix" v-if="slot_keys.includes('prefix')">
@@ -40,7 +40,7 @@
       <input
         ref="input"
         class="s-input__inner"
-        :value="value"
+        v-model="value"
         :placeholder="placeholder"
         :disabled="disabled"
         :type="type"
@@ -91,35 +91,42 @@ export default defineComponent({
       emit('update:modelValue', value.value)
     }
 
-    const oninput = e => {
-      const { value: targetValue } = e.target
-      value.value = targetValue
+    // 处理格式化
+    const formatValue = (e) => {
+      const reg = new RegExp(
+        `[${key.map((item) => '\\' + item).join('')}]`,
+        'g'
+      )
 
+      // 处理删除文本
+      if (
+        (e.inputType === 'deleteContentBackward' ||
+          e.inputType === 'deleteWordBackward') &&
+        e.target.selectionEnd == value.value.length
+      ) {
+        const length = value.value.length
+        value.value = value.value.replace(new RegExp(reg, 'g'), '')
+        value.value = formatter(value.value)
+        if (value.value.length !== length) {
+          const arr = value.value.replace(new RegExp(reg, 'g'), '').split('')
+          arr.splice(arr.length - 1, 1)
+          value.value = formatter(arr.join(''))
+        }
+      }
+      value.value = value.value.replace(new RegExp(reg, 'g'), '')
+      // 格式化后最大值输入校准
+      if (maxLength.value && value.value.length > maxLength.value) {
+        value.value = value.value.slice(0, maxLength.value)
+      }
+
+      textLength.value = value.value.length
+      value.value = formatter(value.value)
+    }
+
+    const oninput = (e) => {
       // 处理格式化
       if (formatter) {
-        const reg = new RegExp(`[${key.map(item => '\\' + item).join('')}]`, 'g')
-
-        // 处理删除文本
-        if (e.inputType == 'deleteContentBackward' && e.target.selectionEnd == value.value.length) {
-          const length = value.value.length
-          value.value = value.value.replace(new RegExp(reg, 'g'), '')
-          value.value = formatter(value.value)
-          if (value.value.length !== length) {
-            const arr = value.value.replace(new RegExp(reg, 'g'), '').split('')
-            arr.splice(arr.length - 1, 1)
-            value.value = formatter(arr.join(''))
-          }
-        }
-        value.value = value.value.replace(new RegExp(reg, 'g'), '')
-
-        // 格式化后最大值输入校准
-        if (maxLength.value && value.value.length > maxLength.value) {
-          value.value = value.value.slice(0, maxLength.value)
-        }
-
-        textLength.value = value.value.length
-        textLength.value = value.value.length
-        value.value = formatter(value.value)
+        formatValue(e)
       } else {
         // 最大值输入
         if (maxLength.value && value.value.length > maxLength.value) {
@@ -160,7 +167,7 @@ export default defineComponent({
           return style
         } else {
           return {
-            minHeight: textarea_height * rows.value + 'px',
+            minHeight: textarea_height * rows.value + 'px'
           }
         }
       } else {
@@ -180,8 +187,8 @@ export default defineComponent({
       readonly,
       maxLength,
       showLimit,
-      textLength,
+      textLength
     }
-  },
+  }
 })
 </script>

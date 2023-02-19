@@ -9,14 +9,15 @@
     ></s-timeline> -->
     <s-input
       v-model="value"
+      type="textarea"
       :rows="2"
       :auto-size="{
         minRows: 0,
-        maxRows: 10,
+        maxRows: 10
       }"
       @input:lazy="c"
       show-limit
-      :formatter="value => '￥ ' + value + ' 元'"
+      :formatter="(value) => '￥' + value"
     >
       <template #append>
         <button>测试</button>
@@ -32,7 +33,7 @@
 import { ref } from 'vue'
 const value = ref('456"')
 
-const c = val => {
+const c = (val) => {
   // console.log(val)
 }
 

@@ -1,0 +1,21 @@
+@use '../common/config';
+
+@font-face {
+  font-family: config.$namespace + '-icon'; /* Project id 3904465 */
+  src: url('iconfont.woff2?t=1676823511717') format('woff2'),
+    url('iconfont.woff?t=1676823511717') format('woff'),
+    url('iconfont.ttf?t=1676823511717') format('truetype'),
+    url('iconfont.svg?t=1676823511717#iconfont') format('svg');
+}
+
+[class*='#{config.$namespace}-icon'] {
+  font-family: 'iconfont' !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.#{config.$namespace}-icon-clear:before {
+  content: '\e601';
+}
