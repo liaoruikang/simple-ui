@@ -1,77 +1,83 @@
-export const inputProps = {
+export const props = {
   modelValue: {
-    type: [Number, String],
+    type: [Number, String]
   },
   placeholder: {
     type: String,
-    default: '请输入内容',
+    default: '请输入内容'
   },
   disabled: {
     type: Boolean,
-    default: false,
+    default: false
   },
   type: {
     type: String,
-    default: 'text',
+    default: 'text'
   },
   autoSize: {
     type: [Object, Boolean],
-    default: false,
+    default: false
   },
   rows: {
     type: Number,
-    default: 1,
+    default: 1
   },
   readonly: {
     type: Boolean,
-    default: false,
+    default: false
   },
   maxLength: {
-    type: Number,
+    type: Number
   },
   showLimit: {
     type: Boolean,
-    default: false,
+    default: false
   },
   formatter: {
-    type: Function,
+    type: Function
   },
   clearable: {
     type: Boolean,
-    default: false,
+    default: false
   },
   max: {
-    type: Number,
+    type: Number
   },
   min: {
-    type: Number,
+    type: Number
   },
   numberType: {
     type: String,
-    default: 'int', // int float
+    default: 'int' // int float
   },
   precision: {
     type: Number,
     validator(value) {
       return value <= 100 && value >= 0
-    },
+    }
   },
   step: {
     type: Number,
-    default: 1,
+    default: 1
   },
   strictlyStep: {
     type: Boolean,
-    default: false,
+    default: false
   },
   showControl: {
     type: Boolean,
-    default: true,
+    default: true
   },
 
   showPassword: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 }
-export const inputEmits = ['update:modelValue', 'change', 'input', 'input:lazy', 'clear']
+export const emits = [
+  'update:modelValue',
+  'change',
+  'input',
+  'input:lazy',
+  'clear'
+]

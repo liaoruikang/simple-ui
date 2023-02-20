@@ -1,20 +1,22 @@
 import version from './version'
 import SInput from './input'
 import STimeline from './timeline'
+import SIcon from './icon'
 
 export { SInput }
 export { STimeline }
+export { SIcon }
 export { version }
 
-const plugins = [SInput, STimeline]
+const components = [SInput, STimeline, SIcon]
 
 const SimpleUi = {
   install(app) {
-    plugins.forEach(plugin => {
-      app.use(plugin)
+    components.forEach((component) => {
+      app.use(component)
     })
   },
-  version,
+  version
 }
 
 const install = SimpleUi.install

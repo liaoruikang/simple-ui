@@ -2,7 +2,7 @@
   <div
     class="s-textarea"
     :class="{
-      'is-disabled': disabled,
+      'is-disabled': disabled
     }"
     v-if="type === 'textarea'"
   >
@@ -26,12 +26,12 @@
     <div
       class="s-input__prepend"
       :style="{
-        cursor: 'pointer',
+        cursor: 'pointer'
       }"
       v-if="type === 'number' && showControl"
       @mousedown="controlChange('sub')"
     >
-      <span class="s-input__prepend--sub">-</span>
+      <s-icon class="s-input__prepend--sub" icon="s-icon-sub"></s-icon>
     </div>
     <div class="s-input__prepend" v-else-if="slot_keys.includes('prepend')">
       <slot name="prepend"></slot>
@@ -42,7 +42,7 @@
       :class="{
         'is-prepend': slot_keys.includes('prepend'),
         'is-append': slot_keys.includes('append'),
-        'is-disabled': disabled,
+        'is-disabled': disabled
       }"
     >
       <span class="s-input__prefix" v-if="slot_keys.includes('prefix')">
@@ -63,17 +63,22 @@
 
       <span tabindex="-1" class="s-input__tool" v-if="!disabled" v-show="value">
         <span class="s-input__tool--clear" v-if="clearable" @click="clear">
-          <i class="s-icon-clear"></i>
+          <s-icon icon="s-icon-clear"></s-icon>
         </span>
         <span
           class="s-input__tool--password"
           v-if="showPassword && type === 'password'"
           @click="showPass = !showPass"
         >
-          <i :class="showPass ? 's-icon-eye-hide' : 's-icon-eye-show'"></i>
+          <s-icon
+            :icon="showPass ? 's-icon-eye-hide' : 's-icon-eye-show'"
+          ></s-icon>
         </span>
       </span>
-      <span class="s-input__limit" v-if="showLimit && !disabled && type !== 'number'">
+      <span
+        class="s-input__limit"
+        v-if="showLimit && !disabled && type !== 'number'"
+      >
         {{ textLength }} / {{ maxLength || '~' }}
       </span>
 
@@ -84,12 +89,12 @@
     <div
       class="s-input__append"
       :style="{
-        cursor: 'pointer',
+        cursor: 'pointer'
       }"
       v-if="type === 'number' && showControl"
       @mousedown="controlChange('add')"
     >
-      <span class="s-input__append--add">+</span>
+      <s-icon class="s-input__append--add" icon="s-icon-add"></s-icon>
     </div>
     <div class="s-input__append" v-else-if="slot_keys.includes('append')">
       <slot name="append"></slot>
@@ -98,11 +103,13 @@
 </template>
 <script>
 import { defineComponent, reactive, ref, computed, toRefs } from 'vue'
-import { inputProps, inputEmits } from './input'
+import { props, emits } from './input'
+import SIcon from '../../icon/index'
 export default defineComponent({
-  props: inputProps,
-  emits: inputEmits,
   name: 's-input',
+  components: { SIcon },
+  props,
+  emits,
   setup(props, { emit, slots }) {
     const { type, rows, maxLength, showLimit } = toRefs(props)
     const value = ref(props.modelValue)
@@ -114,10 +121,22 @@ export default defineComponent({
     let oldValue = ''
     let timer = null
     let key
-    const { autosize, numberType, formatter, min, max, precision, strictlyStep, step } = props
+    const {
+      autosize,
+      numberType,
+      formatter,
+      min,
+      max,
+      precision,
+      strictlyStep,
+      step
+    } = props
 
     const filterValue = () => {
-      const reg = new RegExp(`[${key.map(item => '\\' + item).join('')}]`, 'g')
+      const reg = new RegExp(
+        `[${key.map((item) => '\\' + item).join('')}]`,
+        'g'
+      )
       value.value = value.value.replace(new RegExp(reg, 'g'), '')
     }
 
@@ -149,8 +168,9 @@ export default defineComponent({
       return number
     }
 
-    const setPrecision = number => {
-      if (precision > 100 || precision < 0) throw new Error('"precision" It ranges from 0 to 100.')
+    const setPrecision = (number) => {
+      if (precision > 100 || precision < 0)
+        throw new Error('"precision" It ranges from 0 to 100.')
       return precision !== undefined
         ? Number(number).toFixed(precision).toString()
         : Number(number).toString()
@@ -168,7 +188,10 @@ export default defineComponent({
     const textLimit = () => {
       if (type.value !== 'number') {
         // 格式化后最大值输入校准
-        if (maxLength.value && value.value.toString().length > maxLength.value) {
+        if (
+          maxLength.value &&
+          value.value.toString().length > maxLength.value
+        ) {
           value.value = value.value.toString().slice(0, maxLength.value)
         }
         textLength.value = value.value.toString().length
@@ -205,17 +228,21 @@ export default defineComponent({
     }
 
     // 处理格式化
-    const formatValue = e => {
+    const formatValue = (e) => {
       if (type.value === 'password') {
         textLimit()
         return value.value
       }
 
-      const reg = new RegExp(`[${key.map(item => '\\' + item).join('')}]`, 'g')
+      const reg = new RegExp(
+        `[${key.map((item) => '\\' + item).join('')}]`,
+        'g'
+      )
 
       // 处理删除文本
       if (
-        (e?.inputType === 'deleteContentBackward' || e?.inputType === 'deleteWordBackward') &&
+        (e?.inputType === 'deleteContentBackward' ||
+          e?.inputType === 'deleteWordBackward') &&
         e.target?.selectionEnd == value.value.length
       ) {
         const length = value.value.length
@@ -234,7 +261,7 @@ export default defineComponent({
       value.value = formatter(value.value)
     }
 
-    const oninput = e => {
+    const oninput = (e) => {
       // number限制
       if (type.value === 'number') {
         filterValue()
@@ -281,7 +308,7 @@ export default defineComponent({
     }
 
     let tiemrOut = null
-    const stepChange = type => {
+    const stepChange = (type) => {
       filterValue()
       value.value = Number(value.value)
       switch (type) {
@@ -297,7 +324,7 @@ export default defineComponent({
       value.value = formatter(value.value)
       emit('update:modelValue', value.value)
     }
-    const controlChange = type => {
+    const controlChange = (type) => {
       let timer = null
 
       stepChange(type)
@@ -346,7 +373,7 @@ export default defineComponent({
           return style
         } else {
           return {
-            minHeight: textarea_height * rows.value + 'px',
+            minHeight: textarea_height * rows.value + 'px'
           }
         }
       } else {
@@ -369,8 +396,8 @@ export default defineComponent({
       textLength,
       clear,
       showPass,
-      controlChange,
+      controlChange
     }
-  },
+  }
 })
 </script>

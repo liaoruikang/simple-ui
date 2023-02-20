@@ -102,6 +102,9 @@
   }
 
   @include m.b($prefix: &, $element: 'prepend') {
+    display: flex;
+    align-items: center;
+    height: 100%;
     background-color: f.get_css_var('prepend-bg-color');
     padding: f.get_css_var('input-padding');
     border-radius: inherit;
@@ -114,7 +117,7 @@
       $orientation: (
         0: 1px 0 0 0px,
         1: 0 -1px 0 0px,
-        2: 0 1px 0 0px,
+        2: 0 1px 0 0px
       )
     );
 
@@ -128,6 +131,9 @@
   }
 
   @include m.b($prefix: &, $element: 'append') {
+    display: flex;
+    align-items: center;
+    height: 100%;
     background-color: f.get_css_var('append-bg-color');
     padding: f.get_css_var('input-padding');
     border-radius: inherit;
@@ -140,7 +146,7 @@
       $orientation: (
         0: -1px 0 0 0px,
         1: 0 -1px 0 0px,
-        2: 0 1px 0 0px,
+        2: 0 1px 0 0px
       )
     );
 
@@ -168,9 +174,13 @@
     font-size: 12px;
   }
   @include m.b($prefix: &, $element: 'tool') {
+    display: flex;
     padding-right: 8px;
     &--clear,
     &--password {
+      display: flex;
+      align-items: center;
+      height: 100%;
       margin: 0 2px;
       visibility: hidden;
       color: f.get_css_var('tool-color');

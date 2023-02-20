@@ -15,8 +15,12 @@ $ttf: 'data:application/octet-stream;base64,AAEAAAALAIAAAwAwR1NVQiCLJXoAAAE4AAAA
   -moz-osx-font-smoothing: grayscale;
 }
 
-.#{config.$namespace}-icon-clear:before {
-  content: '\e601';
+.#{config.$namespace}-icon-add:before {
+  content: '\e604';
+}
+
+.#{config.$namespace}-icon-sub:before {
+  content: '\e605';
 }
 
 .#{config.$namespace}-icon-eye-show:before {
@@ -25,4 +29,8 @@ $ttf: 'data:application/octet-stream;base64,AAEAAAALAIAAAwAwR1NVQiCLJXoAAAE4AAAA
 
 .#{config.$namespace}-icon-eye-hide:before {
   content: '\e603';
+}
+
+.#{config.$namespace}-icon-clear:before {
+  content: '\e601';
 }

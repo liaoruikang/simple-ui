@@ -9,12 +9,12 @@
     ></s-timeline> -->
     <s-input
       v-model="value"
-      type="number"
+      type="password"
       number-type="float"
       :rows="2"
       :auto-size="{
         minRows: 0,
-        maxRows: 10,
+        maxRows: 10
       }"
       :max="1000"
       :precision="2"
@@ -25,7 +25,7 @@
       show-password
       :step="0.8"
       strictly-step
-      :formatter="value => '￥' + value"
+      :formatter="(value) => '￥' + value"
     >
       <template #append>
         <button>测试</button>
@@ -41,7 +41,7 @@
 import { ref } from 'vue'
 const value = ref(65.3)
 
-const c = val => {
+const c = (val) => {
   // console.log(val)
 }
 

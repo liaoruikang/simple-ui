@@ -1,0 +1,5 @@
+@use './mixins/mixins' as m;
+
+@include m.b('icon') {
+  display: inline-flex;
+}
