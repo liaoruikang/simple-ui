@@ -1,4 +1,6 @@
+@use 'sass:color';
 @use 'sass:map';
+@use '../common/vars';
 @use '../function/function' as f;
 @use '../mixins/mixins' as m;
 @use '../mixins/var';
@@ -16,6 +18,8 @@ $theme: map.merge(
     placeholder-text-color: #8d9095,
     prepend-bg-color: rgb(56, 56, 56),
     append-bg-color: rgb(56, 56, 56),
+    tool-color: color.scale(map.get(vars.$colors, info-color), $lightness: -10%),
+    tool-hover-color: map.get(vars.$colors, info-color),
   ),
   $theme
 );
@@ -27,7 +31,6 @@ html.dark {
 body {
   background-color: f.get_css_var('bg-color');
   color: f.get_css_var('text-color');
-  font-family: f.get_css_var('font-family');
 
   @include m.transition(background-color);
 }

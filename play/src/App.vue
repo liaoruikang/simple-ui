@@ -9,31 +9,39 @@
     ></s-timeline> -->
     <s-input
       v-model="value"
-      type="textarea"
+      type="number"
+      number-type="float"
       :rows="2"
       :auto-size="{
         minRows: 0,
-        maxRows: 10
+        maxRows: 10,
       }"
+      :max="1000"
+      :precision="2"
+      :max-length="20"
+      clearable
       @input:lazy="c"
       show-limit
-      :formatter="(value) => '￥' + value"
+      show-password
+      :step="0.8"
+      strictly-step
+      :formatter="value => '￥' + value"
     >
       <template #append>
         <button>测试</button>
       </template>
       <template #prepend>测试</template>
       <!-- <template #prefix></template> -->
-      <template #suffix>测试</template>
+      <!-- <template #suffix>测试</template> -->
     </s-input>
     {{ value }}
   </div>
 </template>
 <script setup>
 import { ref } from 'vue'
-const value = ref('456"')
+const value = ref(65.3)
 
-const c = (val) => {
+const c = val => {
   // console.log(val)
 }
 

@@ -3,6 +3,7 @@
 @use './function/function' as f;
 @use './mixins/mixins' as m;
 @use './mixins/var';
+@use './common/config';
 
 @mixin input {
   position: relative;
@@ -27,6 +28,12 @@
 
   &:focus-within {
     @include m.border_shadow($color: f.get_css_var('bd-focus-color'));
+    @include m.b('input', 'tool', 'clear') {
+      visibility: visible;
+    }
+    @include m.b('input', 'tool', 'password') {
+      visibility: visible;
+    }
   }
 }
 
@@ -48,24 +55,29 @@
     height: inherit;
     flex: 1;
     border-radius: inherit;
+    color: f.get_css_var('text-color');
 
     @include input_shadow;
 
-    @include m.b($prefix: &, $state: disabled) {
+    &.is-disabled {
       background-color: f.get_css_var('disabled-bg-color');
       color: f.get_css_var('disabled-text-color');
 
+      @include m.transition(background-color color box-shadow);
       @include m.border_shadow();
     }
-
-    @include m.b($prefix: &, $state: prepend) {
+    &.is-prepend {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
     }
-
-    @include m.b($prefix: &, $state: append) {
+    &.is-append {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
+    }
+    &:hover {
+      @include m.b('input', 'clear', 'text') {
+        visibility: visible;
+      }
     }
   }
 
@@ -75,7 +87,7 @@
     background-color: transparent;
     border: 0;
     padding: f.get_css_var('input-padding');
-    color: f.get_css_var('text-color');
+    color: inherit;
     border-radius: inherit;
     box-sizing: border-box;
     outline: 0;
@@ -105,6 +117,14 @@
         2: 0 1px 0 0px,
       )
     );
+
+    &--sub {
+      padding: f.get_css_var('input-padding');
+      &:hover {
+        color: f.get_css_var('text-hover-color');
+      }
+      @include m.transition(color);
+    }
   }
 
   @include m.b($prefix: &, $element: 'append') {
@@ -123,19 +143,42 @@
         2: 0 1px 0 0px,
       )
     );
+
+    &--add {
+      padding: f.get_css_var('input-padding');
+      &:hover {
+        color: f.get_css_var('text-hover-color');
+      }
+      @include m.transition(color);
+    }
   }
 
   @include m.b($prefix: &, $element: 'prefix') {
     padding-left: 8px;
+    color: f.get_css_var('info-color');
   }
 
   @include m.b($prefix: &, $element: 'suffix') {
     padding-right: 8px;
+    color: f.get_css_var('info-color');
   }
   @include m.b($prefix: &, $element: 'limit') {
+    padding-right: 8px;
     color: f.get_css_var('info-color');
-    padding: f.get_css_var('input-padding');
     font-size: 12px;
+  }
+  @include m.b($prefix: &, $element: 'tool') {
+    padding-right: 8px;
+    &--clear,
+    &--password {
+      margin: 0 2px;
+      visibility: hidden;
+      color: f.get_css_var('tool-color');
+      cursor: pointer;
+      &:hover {
+        color: f.get_css_var('tool-hover-color');
+      }
+    }
   }
 }
 

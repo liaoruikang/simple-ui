@@ -19,7 +19,12 @@ export default series(
         .replace(/"/g, '')
 
     return new Promise(reslove => {
-      let code = fs.readFileSync(versionEsDir).toString()
+      let code
+      try {
+        code = fs.readFileSync(versionEsDir).toString()
+      } catch (error) {
+        reslove(error)
+      }
       code = code.replace(/\$\{simple-ui-version\}/g, version.trim())
       fs.writeFileSync(versionEsDir, code)
       code = fs.readFileSync(versionLibDir).toString()

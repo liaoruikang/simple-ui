@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:color';
 @use '../mixins/var';
 @use '../function/function' as f;
 @use '../mixins/mixins' as m;
@@ -30,8 +31,18 @@ $theme: map.merge(
     placeholder-text-color: #a8abb2,
     prepend-bg-color: rgb(238, 238, 238),
     append-bg-color: rgb(238, 238, 238),
+    tool-color: color.scale(map.get($colors, info-color), $lightness: 10%),
+    tool-hover-color: map.get($colors, info-color),
   ),
   $theme
+);
+
+$common: () !default;
+$common: map.merge(
+  (
+    text-hover-color: color.scale(map.get($colors, primary-color), $lightness: 10%),
+  ),
+  $common
 );
 
 $var-list: () !default;
@@ -45,4 +56,5 @@ $var-list: map.deep-merge(
 :root {
   @include var.set_css_var($theme);
   @include var.set_css_var($colors);
+  @include var.set_css_var($common);
 }
