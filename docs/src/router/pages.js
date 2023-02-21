@@ -8,13 +8,13 @@ export default [
       {
         path: '/home',
         name: 'home',
-        component: () => import('@/views/Home/Home.vue'),
+        component: () => import('@/views/Home/Home.vue')
       },
       {
         path: '/components',
         name: 'components',
-        component: () => import('@/views/Components/index.vue'),
-      },
-    ],
-  },
+        component: () => import('@/views/Components/index.vue')
+      }
+    ]
+  }
 ]
