@@ -7,33 +7,67 @@
       format="hh:mm:ss"
       infinite
     ></s-timeline> -->
+
     <s-input
+      size="small"
+      ref="input"
+      :maxLength="30"
+      showLimit
+      placeholder="测试文本"
+      type="text"
       v-model="value"
-      type="password"
-      number-type="float"
-      :rows="2"
-      :auto-size="{
-        minRows: 0,
-        maxRows: 10
-      }"
-      :max="1000"
-      :precision="2"
-      :max-length="20"
+      :formatter="value => '￥' + value + ' &'"
       clearable
-      @input:lazy="c"
-      show-limit
-      show-password
-      :step="0.8"
-      strictly-step
-      :formatter="(value) => '￥' + value"
     >
+      <!-- 
       <template #append>
-        <button>测试</button>
+        <button @click="$refs.input.focus(), $refs.input.select()">获取焦点并全选</button>
       </template>
-      <template #prepend>测试</template>
-      <!-- <template #prefix></template> -->
-      <!-- <template #suffix>测试</template> -->
+      <template #prepend>
+        <button @click="$refs.input.blur()">失去焦点</button>
+      </template>
+      <template #prefix></template>
+      <template #suffix>测试</template> -->
     </s-input>
+    <s-input
+      tabindex="5"
+      placeholder="测试文本"
+      :rows="5"
+      showLimit
+      autofocus
+      :maxLength="30"
+      :formatter="value => '￥' + value + ' &'"
+      type="textarea"
+      v-model="value"
+      clearable
+    ></s-input>
+    <s-input
+      size="small"
+      type="number"
+      number-type="float"
+      :precision="1"
+      tabindex="5"
+      placeholder="测试文本"
+      :step="0.395"
+      strictly-step
+      :rows="5"
+      showLimit
+      :maxLength="30"
+      :formatter="value => '￥' + value + ' &'"
+      v-model="value"
+      clearable
+    ></s-input>
+    <s-input
+      size="large"
+      type="password"
+      tabindex="5"
+      placeholder="测试文本"
+      showLimit
+      show-password
+      :maxLength="30"
+      v-model="value"
+      clearable
+    ></s-input>
     {{ value }}
   </div>
 </template>
@@ -41,8 +75,8 @@
 import { ref } from 'vue'
 const value = ref(65.3)
 
-const c = (val) => {
-  // console.log(val)
+const c = val => {
+  console.log(val)
 }
 
 const change = () => {

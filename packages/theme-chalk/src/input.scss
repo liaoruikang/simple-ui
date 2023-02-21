@@ -11,7 +11,7 @@
   width: 100%;
   height: f.get_css_var('input-height');
   background-color: f.get_css_var('bg-color');
-  line-height: f.get_css_var('input-height');
+  line-height: f.get_css_var('input-line-height');
   border-radius: f.get_css_var('bd-radius');
 
   @include m.transition(background-color color);
@@ -37,11 +37,38 @@
   }
 }
 
-// 写入变量
-
 @include m.b('input') {
+  // 写入变量
   & {
     @include var.set_css_var(map.get(vars.$var-list, input));
+  }
+
+  &--small {
+    @include var.set_css_var(
+      (
+        input-height: f.get_css_var('small-input-height'),
+        input-line-height: f.get_css_var('small-input-height'),
+        input-padding: f.get_css_var('small-input-padding'),
+      )
+    );
+  }
+  &--middle {
+    @include var.set_css_var(
+      (
+        input-height: f.get_css_var('middle-input-height'),
+        input-line-height: f.get_css_var('middle-input-height'),
+        input-padding: f.get_css_var('middle-input-padding'),
+      )
+    );
+  }
+  &--large {
+    @include var.set_css_var(
+      (
+        input-height: f.get_css_var('large-input-height'),
+        input-line-height: f.get_css_var('large-input-height'),
+        input-padding: f.get_css_var('large-input-padding'),
+      )
+    );
   }
 
   display: flex;
@@ -75,7 +102,10 @@
       border-bottom-right-radius: 0;
     }
     &:hover {
-      @include m.b('input', 'clear', 'text') {
+      @include m.b('input', 'tool', 'clear') {
+        visibility: visible;
+      }
+      @include m.b('input', 'tool', 'password') {
         visibility: visible;
       }
     }
@@ -83,6 +113,7 @@
 
   @include m.b($prefix: &, $element: 'inner') {
     flex: 1;
+    width: 0;
     height: 100%;
     background-color: transparent;
     border: 0;
@@ -117,12 +148,13 @@
       $orientation: (
         0: 1px 0 0 0px,
         1: 0 -1px 0 0px,
-        2: 0 1px 0 0px
+        2: 0 1px 0 0px,
       )
     );
 
     &--sub {
       padding: f.get_css_var('input-padding');
+      user-select: none;
       &:hover {
         color: f.get_css_var('text-hover-color');
       }
@@ -146,12 +178,13 @@
       $orientation: (
         0: -1px 0 0 0px,
         1: 0 -1px 0 0px,
-        2: 0 1px 0 0px
+        2: 0 1px 0 0px,
       )
     );
 
     &--add {
       padding: f.get_css_var('input-padding');
+      user-select: none;
       &:hover {
         color: f.get_css_var('text-hover-color');
       }
@@ -209,7 +242,6 @@
 
   @include m.b($prefix: &, $element: 'inner') {
     flex: 1;
-    height: f.get_css_var('textarea-height');
     background-color: transparent;
     color: f.get_css_var('text-color');
     border: 0;
@@ -219,12 +251,17 @@
     outline: 0;
     resize: vertical;
 
+    &::-webkit-input-placeholder {
+      color: f.get_css_var('placeholder-text-color');
+    }
+
     @include input_shadow;
 
     &[disabled] {
       cursor: not-allowed;
       resize: none;
       @include m.border_shadow();
+      color: f.get_css_var('disabled-text-color');
     }
 
     &::-webkit-scrollbar {

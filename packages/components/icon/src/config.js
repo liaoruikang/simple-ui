@@ -1,14 +1,14 @@
 export const props = {
   size: {
     type: String,
-    default: '1em'
+    default: '1em',
   },
   color: {
     type: String,
-    default: 'currentColor'
+    default: 'currentColor',
   },
   icon: {
-    type: String
-  }
+    type: String,
+  },
 }
 export const emits = []

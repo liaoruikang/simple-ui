@@ -7,7 +7,7 @@
 </template>
 <script>
 import { computed, defineComponent, toRefs } from 'vue'
-import { emits, props } from './icon'
+import { emits, props } from './config'
 import './iconfont'
 export default defineComponent({
   name: 's-icon',
@@ -22,10 +22,10 @@ export default defineComponent({
         width: size,
         height: size,
         fill: color,
-        overflow: 'hidden'
+        overflow: 'hidden',
       }
     })
     return { icon, styles }
-  }
+  },
 })
 </script>

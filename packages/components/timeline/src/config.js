@@ -1,4 +1,4 @@
-export const timelineProps = {
+export const props = {
   modelValue: {
     type: [String, Number, Date],
     default: '00:00:00',
@@ -28,4 +28,4 @@ export const timelineProps = {
     default: '',
   },
 }
-export const timelineEmits = ['update:modelValue', 'input', 'change']
+export const emits = ['update:modelValue', 'input', 'change']

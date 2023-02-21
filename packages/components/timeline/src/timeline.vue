@@ -20,13 +20,13 @@
 </template>
 <script>
 import { defineComponent, reactive, ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
-import { timelineEmits, timelineProps } from './timeline'
+import { emits, props } from './config'
 import useDateFormat from '@simple-ui/hooks/useDateFormat'
 
 export default defineComponent({
   name: 's-timeline',
-  emits: timelineEmits,
-  props: timelineProps,
+  emits,
+  props,
   setup(props, { emit, expose }) {
     const update = ref(0)
     const currentDate = ref(null)
