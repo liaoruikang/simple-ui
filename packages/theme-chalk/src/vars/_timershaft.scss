@@ -1,0 +1,9 @@
+@use '../function/function' as f;
+$timershaft: (
+  small-timershaft-height: 38px,
+  middle-timershaft-height: 45px,
+  large-timershaft-height: 52px,
+  timershaft-height: 45px,
+  timershaft-content-color: f.get_css_var('fill-color'),
+  timershaft-line-color: f.get_css_var('text-color2'),
+);

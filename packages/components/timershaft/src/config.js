@@ -27,5 +27,28 @@ export const props = {
     type: String,
     default: '',
   },
+  size: {
+    type: String,
+    default: 'middle',
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  proportion: {
+    type: Number,
+    default: 120,
+    validator(value) {
+      return value > 0 && value <= 120
+    },
+  },
+  isZoom: {
+    type: Boolean,
+    default: true,
+  },
+  isJump: {
+    type: Boolean,
+    default: true,
+  },
 }
 export const emits = ['update:modelValue', 'input', 'change']

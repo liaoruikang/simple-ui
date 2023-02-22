@@ -1,0 +1,161 @@
+@use 'sass:map';
+@use './mixins/mixins' as m;
+@use './mixins/var';
+@use './common/vars';
+@use './function/function' as f;
+
+@include m.b('timershaft') {
+  & {
+    @include var.set_css_var(map.get(vars.$var-list, timershaft));
+  }
+
+  position: relative;
+  height: f.get_css_var('timershaft-height');
+  background-color: f.get_css_var('bg-color');
+  overflow: hidden;
+  cursor: grab;
+  border-radius: f.get_css_var('bd-radius');
+  user-select: none;
+  -webkit-user-select: none;
+
+  &.is-disabled {
+    opacity: 0.6;
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: not-allowed;
+      z-index: 100;
+    }
+
+    &__content {
+      pointer-events: none;
+    }
+  }
+
+  @include m.border-shadow;
+  @include m.transition(background-color box-shadow);
+  // @include m.shadow($transition: background-color box-shadow);
+  &:active {
+    cursor: grabbing;
+  }
+
+  &__scaleplate {
+    position: absolute;
+    height: 100%;
+    left: 50%;
+    top: 0;
+    background-color: f.get_css_var('timershaft-line-color');
+    width: 1px;
+    z-index: 10;
+
+    @include m.transition(background-color);
+  }
+
+  &__currenttime {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    z-index: 9;
+    font-size: 14px;
+    color: f.get_css_var('text-color');
+
+    @include m.transition(color);
+  }
+
+  &__content {
+    position: relative;
+    background-color: f.get_css_var('timershaft-content-color');
+    height: 10px;
+    top: 28px;
+    margin: 0;
+    cursor: pointer;
+
+    @include m.transition(background-color);
+
+    @include m.b('timershaft', 'time') {
+      position: absolute;
+      height: 40px;
+      flex-direction: column;
+      align-items: center;
+      margin-top: -15px;
+      width: 1px;
+      .line {
+        display: block;
+        height: 25px;
+        background-color: f.get_css_var('timershaft-line-color');
+        margin-top: 14px;
+
+        @include m.transition(background-color);
+      }
+      .simpleLine {
+        display: block;
+        background-color: f.get_css_var('timershaft-line-color');
+        height: 12px;
+        margin-top: 14px;
+
+        @include m.transition(background-color);
+      }
+      &--item {
+        position: absolute;
+        transform: translateX(-50%);
+        color: f.get_css_var('timershaft-line-color');
+        font-size: 13px;
+
+        @include m.transition(color);
+      }
+      &.off {
+        @include m.b('timershaft', 'time', 'item') {
+          color: f.get_css_var('disabled-text-color2');
+        }
+        .simpleLine,
+        .line {
+          background-color: f.get_css_var('disabled-text-color2');
+        }
+      }
+    }
+  }
+}
+
+@include m.b('timershaft', 'small') {
+  @include var.set_css_var(
+    (
+      timershaft-height: f.get_css_var('small-timershaft-height'),
+    )
+  );
+  @include m.b('timershaft', 'currenttime') {
+    font-size: 13px;
+  }
+  @include m.b('timershaft', 'content') {
+    top: 26px;
+    height: 8px;
+  }
+  @include m.b('timershaft', 'time') {
+    &--item {
+      font-size: 12px;
+    }
+    .simpleLine {
+      height: 9px;
+
+      @include m.transition(background-color);
+    }
+  }
+}
+@include m.b('timershaft', 'large') {
+  @include var.set_css_var(
+    (
+      timershaft-height: f.get_css_var('large-timershaft-height'),
+    )
+  );
+  @include m.b('timershaft', 'currenttime') {
+    font-size: 16px;
+  }
+  @include m.b('timershaft', 'content') {
+    top: 32px;
+    height: 12px;
+  }
+}

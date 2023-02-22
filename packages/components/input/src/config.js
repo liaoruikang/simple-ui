@@ -37,6 +37,12 @@ export const props = {
     type: Number,
     default: 1,
   },
+  prefixIcon: {
+    type: String,
+  },
+  suffixIcon: {
+    type: String,
+  },
 
   // !number
   maxLength: {

@@ -8,7 +8,6 @@ export default (date, format) => {
     }
     date = new Date(date)
   }
-  if (isValidDate(date)) throw new Error('data formatting error.')
   var paddNum = function (num) {
     num += ''
     return num.replace(/^(\d)$/, '0$1')

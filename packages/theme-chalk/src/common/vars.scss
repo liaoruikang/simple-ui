@@ -23,14 +23,14 @@ $theme: map.merge(
     bg-color: #ffffff,
     bd-color: #dcdfe6,
     text-color: #606266,
-    bd-radius: 4px,
+    text-color2: rgb(207, 199, 199),
     bd-focus-color: map.get($colors, primary-color),
     bd-hover-color: #c0c4cc,
     disabled-bg-color: #f5f7fa,
     disabled-text-color: #e4e7ed,
+    disabled-text-color2: #d7d9dd,
     placeholder-text-color: #a8abb2,
-    prepend-bg-color: rgb(238, 238, 238),
-    append-bg-color: rgb(238, 238, 238),
+    fill-color: rgb(238, 238, 238),
     tool-color: color.scale(map.get($colors, info-color), $lightness: 10%),
     tool-hover-color: map.get($colors, info-color),
   ),
@@ -41,6 +41,10 @@ $common: () !default;
 $common: map.merge(
   (
     text-hover-color: color.scale(map.get($colors, primary-color), $lightness: 10%),
+    small-height: 24px,
+    middle-height: 30px,
+    large-height: 36px,
+    bd-radius: 4px,
   ),
   $common
 );
@@ -49,6 +53,7 @@ $var-list: () !default;
 $var-list: map.deep-merge(
   (
     input: vars.$input,
+    timershaft: vars.$timershaft,
   ),
   $var-list
 );

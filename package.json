@@ -1,7 +1,7 @@
 {
   "name": "simple-ui",
   "version": "0.0.1",
-  "private": true,
+  "private": false,
   "scripts": {
     "play": "pnpm run -C play dev",
     "build": "gulp -f build/gulpfile.js",

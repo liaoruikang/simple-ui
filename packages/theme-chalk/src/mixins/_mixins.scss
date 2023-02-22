@@ -38,7 +38,7 @@
   }
 }
 
-// 阴影边框
+// 生成阴影边框
 @mixin border_shadow(
   $orientation: (
     0: 0 0 0 1px,
@@ -51,4 +51,17 @@
     $str: $str + $value + ' ' + $color + ' ' + $mode + ',';
   }
   box-shadow: string.unquote(string.slice($str, 1, -2));
+}
+
+// 公共边框阴影
+@mixin shadow($transition: box-shadow) {
+  @include border_shadow();
+  @include transition($transition);
+  &:hover {
+    @include border_shadow($color: f.get_css_var('bd-hover-color'));
+  }
+  &:focus-within {
+    @include border_shadow($color: f.get_css_var('bd-focus-color'));
+    @content;
+  }
 }

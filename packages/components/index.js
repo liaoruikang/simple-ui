@@ -1,22 +1,22 @@
 import version from './version'
 import SInput from './input'
-import STimeline from './timeline'
+import STimershaft from './timershaft'
 import SIcon from './icon'
 
 export { SInput }
-export { STimeline }
+export { STimershaft }
 export { SIcon }
 export { version }
 
-const components = [SInput, STimeline, SIcon]
+const components = [SInput, STimershaft, SIcon]
 
 const SimpleUi = {
   install(app) {
-    components.forEach((component) => {
+    components.forEach(component => {
       app.use(component)
     })
   },
-  version
+  version,
 }
 
 const install = SimpleUi.install

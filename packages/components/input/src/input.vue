@@ -48,8 +48,9 @@
         'is-disabled': disabled,
       }"
     >
-      <span class="s-input__prefix" v-if="slot_keys.includes('prefix')">
-        <slot name="prefix"></slot>
+      <span class="s-input__prefix" v-if="slot_keys.includes('prefix') || prefixIcon">
+        <s-icon class="s-input__prefix--icon" :icon="prefixIcon" v-if="prefixIcon"></s-icon>
+        <slot name="prefix" v-else></slot>
       </span>
       <input
         ref="input"
@@ -83,8 +84,9 @@
         {{ textLength }} / {{ maxLength || '~' }}
       </span>
 
-      <span class="s-input__suffix" v-if="slot_keys.includes('suffix')">
-        <slot name="suffix"></slot>
+      <span class="s-input__suffix" v-if="slot_keys.includes('suffix') || suffixIcon">
+        <s-icon class="s-input__suffix--icon" :icon="suffixIcon" v-if="suffixIcon"></s-icon>
+        <slot name="suffix" v-else></slot>
       </span>
     </div>
     <div

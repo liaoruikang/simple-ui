@@ -1,18 +1,28 @@
 <template>
-  <div class="timeline_container" ref="mainRef" @mousedown="down">
-    <div class="scaleplate"></div>
-    <span class="currentTime">{{ time }}</span>
-    <div class="timeline_content" ref="axisRef" :style="{ left: left + 'px' }" @click="jump">
+  <div
+    class="s-timershaft"
+    :class="[`s-timershaft__${size}`, disabled ? 'is-disabled' : '']"
+    ref="mainRef"
+    @mousedown="!disabled && down($event)"
+  >
+    <div class="s-timershaft__scaleplate"></div>
+    <span class="s-timershaft__currenttime">{{ time }}</span>
+    <div
+      class="s-timershaft__content"
+      ref="axisRef"
+      :style="{ left: left + 'px' }"
+      @click="isJump && jump($event)"
+    >
       <div
-        class="time"
+        class="s-timershaft__time"
         :class="{
-          'is-disabled': !infinite && !timeLimit(item.timestamp - 86400000, 'boolean'),
+          off: !infinite && !timeLimit(item.timestamp - 86400000, 'boolean'),
         }"
         v-for="(item, index) in lineList"
         :key="index"
         :style="{ left: item.left + 'px' }"
       >
-        <span class="time_item">{{ item.time }}</span>
+        <span class="s-timershaft__time--item">{{ item.time }}</span>
         <span :class="item.lineType"></span>
       </div>
     </div>
@@ -24,7 +34,7 @@ import { emits, props } from './config'
 import useDateFormat from '@simple-ui/hooks/useDateFormat'
 
 export default defineComponent({
-  name: 's-timeline',
+  name: 's-timershaft',
   emits,
   props,
   setup(props, { emit, expose }) {
@@ -42,29 +52,57 @@ export default defineComponent({
     let timer = null
     let intervalTimer = null
     let downX = 0
-    let proportion = 120
+    let proportion = props.proportion < 1 ? 1 : props.proportion > 120 ? 120 : props.proportion
     let zoom = 120
     let isMove = false
     let infoWidth = 0
-    const type = props.type
-    const format = props.format
-    const valueFormat = props.valueFormat
+    const type = ref('')
+    const format = ref('')
+    const valueFormat = ref('')
+
     const time = computed(() => {
-      switch (type) {
+      switch (type.value) {
         case 'datetime':
           let date = new Date(`${currentDate.value} ${currentTime.value}`)
-          const dateFormat = format || valueFormat || 'yyyy-MM-dd hh:mm:ss'
+          const dateFormat = format.value || valueFormat.value || 'yyyy-MM-dd hh:mm:ss'
           date = useDateFormat(date, dateFormat)
           return date
         case 'time':
           const timeFormat =
-            format.replace(/date|yy|yyyy|M|MM|d|dd|timestamp/g, '') ||
-            valueFormat.replace(/date|yy|yyyy|M|MM|d|dd|timestamp/g, '') ||
+            format.value.replace(/date|yy|yyyy|M|MM|d|dd|timestamp/g, '') ||
+            valueFormat.value.replace(/date|yy|yyyy|M|MM|d|dd|timestamp/g, '') ||
             'hh:mm:ss'
           const time = useDateFormat(`1970-01-01 ${currentTime.value}`, timeFormat)
           return time
       }
     })
+
+    const updateZoom = () => {
+      if (proportion > 90) {
+        zoom = 120 * (120 / 120)
+      } else if (proportion <= 90 && proportion > 60) {
+        zoom = 120 * (120 / 90)
+      } else if (proportion <= 60 && proportion > 45) {
+        zoom = 120 * (120 / 60)
+      } else if (proportion <= 45 && proportion > 30) {
+        zoom = 120 * (120 / 45)
+      } else if (proportion <= 30 && proportion > 20) {
+        zoom = 120 * (120 / 30)
+      } else if (proportion <= 20 && proportion > 15) {
+        zoom = 120 * (120 / 20)
+      } else if (proportion <= 15 && proportion > 10) {
+        zoom = 120 * (120 / 15)
+      } else if (proportion <= 10 && proportion > 5) {
+        zoom = 120 * (120 / 10)
+      } else if (proportion <= 5 && proportion > 3) {
+        zoom = 120 * (120 / 5)
+      } else if (proportion <= 3 && proportion > 1) {
+        zoom = 120 * (120 / 3)
+      } else {
+        zoom = 120 * (120 / 1)
+      }
+    }
+    updateZoom()
 
     const formatTime = (time, type = 'time') => {
       if (type == 'time') {
@@ -97,18 +135,18 @@ export default defineComponent({
 
     const updateTime = (option, emitName) => {
       let date
-      switch (type) {
+      switch (type.value) {
         case 'datetime':
           date = new Date(
-            `${option?.date || currentDate.value} ${option?.time || currentTime.value}`
+            `${option?.date ?? currentDate.value} ${option?.time ?? currentTime.value}`
           )
-          const dateFormat = valueFormat || 'date'
+          const dateFormat = valueFormat.value || 'date'
           date = useDateFormat(date, dateFormat)
           emit(emitName, date)
           break
         case 'time':
           const timeFormat =
-            valueFormat.replace(/date|yy|yyyy|M|MM|d|dd|timestamp/g, '') || 'hh:mm:ss'
+            valueFormat.value.replace(/date|yy|yyyy|M|MM|d|dd|timestamp/g, '') || 'hh:mm:ss'
           const time = useDateFormat(`1970-01-01 ${option?.time || currentTime.value}`, timeFormat)
           emit(emitName, time)
           break
@@ -116,47 +154,74 @@ export default defineComponent({
     }
 
     const initData = modelValue => {
-      try {
-        if (typeof minTime === 'string') {
-          minTime.value = formatTime(minTime.value, 'timestamp')
-        } else if (minTime.value.toString().length > 8) {
-          throw new Error(
-            'If the minTime length exceeds the limit, the length should be less than 8.'
-          )
-        }
-        if (typeof maxTime === 'string') {
-          maxTime.value = formatTime(maxTime.value, 'timestamp')
-        } else if (maxTime.value.toString().length > 8) {
-          throw new Error(
-            'If the maxTime length exceeds the limit, the length should be less than 8.'
-          )
-        }
-        if (maxTime.value < 1000) {
-          maxTime.value = 0
-        }
-        if (minTime.value < 1000) {
-          minTime.value = 0
-        }
-
-        let date
-        switch (type) {
-          case 'datetime':
-            date = useDateFormat(modelValue, 'yyyy-MM-dd hh:mm:ss')
-            currentDate.value = date.split(' ')[0]
-            currentTime.value = date.split(' ')[1]
-            break
-          case 'time':
-            date = useDateFormat(`1970-01-01 ${modelValue}`, 'yyyy-MM-dd hh:mm:ss')
-            currentDate.value = date.split(' ')[0]
-            currentTime.value = date.split(' ')[1]
-            break
-        }
-        currentTimestamp.value = formatTime(currentTime.value, 'timestamp')
-      } catch (error) {
-        throw new Error(error)
+      if (typeof minTime === 'string') {
+        minTime.value = formatTime(minTime.value, 'timestamp')
+      } else if (minTime.value.toString().length > 8) {
+        throw new Error(
+          'If the minTime length exceeds the limit, the length should be less than 8.'
+        )
       }
+      if (typeof maxTime === 'string') {
+        maxTime.value = formatTime(maxTime.value, 'timestamp')
+      } else if (maxTime.value.toString().length > 8) {
+        throw new Error(
+          'If the maxTime length exceeds the limit, the length should be less than 8.'
+        )
+      }
+      if (maxTime.value < 1000) {
+        maxTime.value = 0
+      }
+      if (minTime.value < 1000) {
+        minTime.value = 0
+      }
+
+      let date
+      switch (type.value) {
+        case 'datetime':
+          date = useDateFormat(modelValue, 'yyyy-MM-dd hh:mm:ss')
+          currentDate.value = date.split(' ')[0]
+          currentTime.value = date.split(' ')[1]
+          updateTime(null, 'update:modelValue')
+          break
+        case 'time':
+          if (
+            /[^\s]{1,2}:[^\s]{1,2}:[^\s]{1,2}/.test(modelValue) &&
+            modelValue?.constructor !== Date
+          ) {
+            currentDate.value = '1970-01-01'
+            currentTime.value = modelValue
+          } else if (modelValue?.constructor === Date) {
+            const time = useDateFormat(modelValue, 'hh:mm:ss')
+            currentTime.value = time
+          } else if (typeof modelValue === 'number') {
+            currentDate.value = '1970-01-01'
+            currentTime.value = formatTime(modelValue, 'time')
+          }
+          updateTime(
+            {
+              time: currentTime.value,
+              date: '',
+            },
+            'update:modelValue'
+          )
+          break
+      }
+      currentTimestamp.value = formatTime(currentTime.value, 'timestamp')
     }
-    initData(props.modelValue)
+
+    watch(
+      props,
+      () => {
+        type.value = props.type
+        format.value = props.format
+        valueFormat.value = props.valueFormat
+        initData(props.modelValue)
+      },
+      {
+        immediate: true,
+        deep: true,
+      }
+    )
 
     watch(
       () => currentTime.value,
@@ -174,7 +239,9 @@ export default defineComponent({
       window.addEventListener('mouseup', up)
       window.addEventListener('keydown', keydown)
       window.addEventListener('keyup', keyup)
-      mainRef.value.addEventListener('wheel', wheel, { passive: false })
+      if (props.isZoom) {
+        mainRef.value.addEventListener('wheel', wheel, { passive: false })
+      }
       clearInterval(intervalTimer)
       intervalTimer = setInterval(() => {
         update.value = !update.value
@@ -358,29 +425,7 @@ export default defineComponent({
           proportion = 120
         }
       }
-      if (proportion > 90) {
-        zoom = 120 * (120 / 120)
-      } else if (proportion <= 90 && proportion > 60) {
-        zoom = 120 * (120 / 90)
-      } else if (proportion <= 60 && proportion > 45) {
-        zoom = 120 * (120 / 60)
-      } else if (proportion <= 45 && proportion > 30) {
-        zoom = 120 * (120 / 45)
-      } else if (proportion <= 30 && proportion > 20) {
-        zoom = 120 * (120 / 30)
-      } else if (proportion <= 20 && proportion > 15) {
-        zoom = 120 * (120 / 20)
-      } else if (proportion <= 15 && proportion > 10) {
-        zoom = 120 * (120 / 15)
-      } else if (proportion <= 10 && proportion > 5) {
-        zoom = 120 * (120 / 10)
-      } else if (proportion <= 5 && proportion > 3) {
-        zoom = 120 * (120 / 5)
-      } else if (proportion <= 3 && proportion > 1) {
-        zoom = 120 * (120 / 3)
-      } else {
-        zoom = 120 * (120 / 1)
-      }
+      updateZoom()
       initAxis()
       location()
     }
@@ -519,30 +564,6 @@ export default defineComponent({
       } else if (type == 'boolean') {
         return timestamp < minTime.value ? false : timestamp > maxTime.value ? false : true
       }
-      // const today = `${new Date().getFullYear()}-${
-      //   new Date().getMonth() + 1
-      // }-${new Date().getDate()}`
-      // if (currentDate.value == today) {
-      //   if (type == 'deafult') {
-      //     if (timestamp == undefined) return formatTime(null, 'timestamp')
-      //     timestamp = calibration(timestamp)
-      //     return timestamp < 0
-      //       ? 0
-      //       : timestamp > formatTime(null, 'timestamp')
-      //       ? formatTime(null, 'timestamp')
-      //       : timestamp
-      //   } else if (type == 'boolean') {
-      //     return timestamp < 0 ? false : timestamp > formatTime(null, 'timestamp') ? false : true
-      //   }
-      // } else {
-      //   if (type == 'deafult') {
-      //     if (timestamp == undefined) return 86399000
-      //     timestamp = calibration(timestamp)
-      //     return timestamp < 0 ? 0 : timestamp > 86399000 ? 86399000 : timestamp
-      //   } else if (type == 'boolean') {
-      //     return timestamp < 0 ? false : timestamp > 86399000 ? false : true
-      //   }
-      // }
     }
 
     const getTimestampLimit = delay => {
@@ -576,7 +597,6 @@ export default defineComponent({
     }
 
     expose({
-      location,
       jump,
     })
 
@@ -599,6 +619,3 @@ export default defineComponent({
   },
 })
 </script>
-<style lang="scss" scoped>
-@use '@simple-ui/theme-chalk/src/timeline';
-</style>
