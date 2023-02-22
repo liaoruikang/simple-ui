@@ -16,7 +16,7 @@
       <div
         class="s-timershaft__time"
         :class="{
-          off: !infinite && !timeLimit(item.timestamp - 86400000, 'boolean'),
+          off: !infinite && !timeLimit(item.timestamp - 86400000, 'boolean')
         }"
         v-for="(item, index) in lineList"
         :key="index"
@@ -29,7 +29,15 @@
   </div>
 </template>
 <script>
-import { defineComponent, reactive, ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
+import {
+  defineComponent,
+  reactive,
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  watch,
+  computed
+} from 'vue'
 import { emits, props } from './config'
 import useDateFormat from '@simple-ui/hooks/useDateFormat'
 
@@ -52,7 +60,8 @@ export default defineComponent({
     let timer = null
     let intervalTimer = null
     let downX = 0
-    let proportion = props.proportion < 1 ? 1 : props.proportion > 120 ? 120 : props.proportion
+    let proportion =
+      props.proportion < 1 ? 1 : props.proportion > 120 ? 120 : props.proportion
     let zoom = 120
     let isMove = false
     let infoWidth = 0
@@ -64,15 +73,22 @@ export default defineComponent({
       switch (type.value) {
         case 'datetime':
           let date = new Date(`${currentDate.value} ${currentTime.value}`)
-          const dateFormat = format.value || valueFormat.value || 'yyyy-MM-dd hh:mm:ss'
+          const dateFormat =
+            format.value || valueFormat.value || 'yyyy-MM-dd hh:mm:ss'
           date = useDateFormat(date, dateFormat)
           return date
         case 'time':
           const timeFormat =
             format.value.replace(/date|yy|yyyy|M|MM|d|dd|timestamp/g, '') ||
-            valueFormat.value.replace(/date|yy|yyyy|M|MM|d|dd|timestamp/g, '') ||
+            valueFormat.value.replace(
+              /date|yy|yyyy|M|MM|d|dd|timestamp/g,
+              ''
+            ) ||
             'hh:mm:ss'
-          const time = useDateFormat(`1970-01-01 ${currentTime.value}`, timeFormat)
+          const time = useDateFormat(
+            `1970-01-01 ${currentTime.value}`,
+            timeFormat
+          )
           return time
       }
     })
@@ -116,7 +132,7 @@ export default defineComponent({
         return `${h}:${m}:${s}`
       } else if (type == 'timestamp') {
         if (!isNaN(time?.split(':')[0])) {
-          let [h, m, s] = time.split(':').map(item => {
+          let [h, m, s] = time.split(':').map((item) => {
             return parseInt(item)
           })
           h = h * 1000 * 60 * 60
@@ -138,22 +154,31 @@ export default defineComponent({
       switch (type.value) {
         case 'datetime':
           date = new Date(
-            `${option?.date ?? currentDate.value} ${option?.time ?? currentTime.value}`
+            `${option?.date ?? currentDate.value} ${
+              option?.time ?? currentTime.value
+            }`
           )
           const dateFormat = valueFormat.value || 'date'
           date = useDateFormat(date, dateFormat)
+          console.log(date)
           emit(emitName, date)
           break
         case 'time':
           const timeFormat =
-            valueFormat.value.replace(/date|yy|yyyy|M|MM|d|dd|timestamp/g, '') || 'hh:mm:ss'
-          const time = useDateFormat(`1970-01-01 ${option?.time || currentTime.value}`, timeFormat)
+            valueFormat.value.replace(
+              /date|yy|yyyy|M|MM|d|dd|timestamp/g,
+              ''
+            ) || 'hh:mm:ss'
+          const time = useDateFormat(
+            `1970-01-01 ${option?.time || currentTime.value}`,
+            timeFormat
+          )
           emit(emitName, time)
           break
       }
     }
 
-    const initData = modelValue => {
+    const initData = (modelValue) => {
       if (typeof minTime === 'string') {
         minTime.value = formatTime(minTime.value, 'timestamp')
       } else if (minTime.value.toString().length > 8) {
@@ -175,12 +200,19 @@ export default defineComponent({
         minTime.value = 0
       }
 
-      let date
       switch (type.value) {
         case 'datetime':
-          date = useDateFormat(modelValue, 'yyyy-MM-dd hh:mm:ss')
-          currentDate.value = date.split(' ')[0]
-          currentTime.value = date.split(' ')[1]
+          if (
+            /[^\s]{1,2}:[^\s]{1,2}:[^\s]{1,2}/.test(modelValue) &&
+            modelValue?.constructor !== Date
+          ) {
+            currentDate.value = '1970-01-01'
+            currentTime.value = modelValue
+          } else if (modelValue?.constructor === Date) {
+            const date = useDateFormat(modelValue, 'yyyy-MM-dd hh:mm:ss')
+            currentDate.value = date.split(' ')[0]
+            currentTime.value = date.split(' ')[1]
+          }
           updateTime(null, 'update:modelValue')
           break
         case 'time':
@@ -200,7 +232,7 @@ export default defineComponent({
           updateTime(
             {
               time: currentTime.value,
-              date: '',
+              date: ''
             },
             'update:modelValue'
           )
@@ -208,7 +240,6 @@ export default defineComponent({
       }
       currentTimestamp.value = formatTime(currentTime.value, 'timestamp')
     }
-
     watch(
       props,
       () => {
@@ -219,7 +250,7 @@ export default defineComponent({
       },
       {
         immediate: true,
-        deep: true,
+        deep: true
       }
     )
 
@@ -256,7 +287,7 @@ export default defineComponent({
       clearInterval(intervalTimer)
     })
 
-    const initAxis = (delay = { ld: 0, rd: 0 }) => {
+    const initAxis = async (delay = { ld: 0, rd: 0 }) => {
       infoWidth = (120 / proportion) * mainRef.value.offsetWidth
       axisRef.value.style.width = infoWidth * 3 + 'px'
       const { min, max } = getTimestampLimit(delay)
@@ -270,44 +301,64 @@ export default defineComponent({
           infoWidth -
           mainRef.value.offsetWidth / 2
         if (left >= x - 30 && left <= x + mainRef.value.offsetWidth + 30) {
-          lineList.push({
+          const line = {
             time: i % 10 == 0 ? formatTime(timestamp) : '',
             timestamp,
             left,
-            lineType: i % 10 == 0 ? 'line' : 'simpleLine',
-          })
+            lineType: i % 10 == 0 ? 'line' : 'simpleLine'
+          }
+          lineList.push(line)
         }
         timestamp += 86400000 / zoom
         i++
       }
+      // await nextTick()
+      // const itemWidth = (infoWidth * 3) / lineList.length
+      // const [labelWidth] = Array.from(
+      //   axisRef.value.querySelectorAll('.s-timershaft__time--item')
+      // )
+      //   .filter((item) => item.offsetWidth > 0)
+      //   .map((item) => item.offsetWidth)
+      // lineList.forEach((item, index) => {
+      //   if (item.lineType === 'line') {
+      //     item.labelShow = item.id % Math.ceil(labelWidth / itemWidth) === 0
+      //   }
+      // })
     }
 
-    const location = timestamp => {
+    const location = (timestamp) => {
       if (timestamp) {
         currentTimestamp.value = timestamp
         currentTime.value = formatTime(currentTimestamp.value, 'time')
       }
       const x =
-        (currentTimestamp.value / 86400000) * infoWidth + infoWidth - mainRef.value.offsetWidth / 2
+        (currentTimestamp.value / 86400000) * infoWidth +
+        infoWidth -
+        mainRef.value.offsetWidth / 2
       left.value = -x
     }
 
-    const down = e => {
+    const down = (e) => {
       window.addEventListener('mousemove', move)
       const rect = axisRef.value.getBoundingClientRect()
       downX = e.pageX - rect.left
     }
 
-    const move = e => {
+    const move = (e) => {
       isMove = true
       const rect = mainRef.value.getBoundingClientRect()
       let x = e.pageX - rect.left - downX
       if (infinite.value) {
         if (x > -(infoWidth - mainRef.value.offsetWidth / 2)) {
           x = -(infoWidth + infoWidth / 2 - mainRef.value.offsetWidth / 2)
-          downX = downX + (infoWidth / 2 + infoWidth - mainRef.value.offsetWidth / 2)
-          const date = new Date(new Date(currentDate.value).getTime() - 86400000)
-          const d = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+          downX =
+            downX + (infoWidth / 2 + infoWidth - mainRef.value.offsetWidth / 2)
+          const date = new Date(
+            new Date(currentDate.value).getTime() - 86400000
+          )
+          const d = `${date.getFullYear()}-${
+            date.getMonth() + 1
+          }-${date.getDate()}`
           currentDate.value = d
         }
       } else if (
@@ -329,8 +380,12 @@ export default defineComponent({
         if (x < -(infoWidth + infoWidth - mainRef.value.offsetWidth / 2)) {
           x = -(infoWidth - mainRef.value.offsetWidth / 2)
           downX = downX - infoWidth
-          const date = new Date(new Date(currentDate.value).getTime() + 86400000)
-          const d = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+          const date = new Date(
+            new Date(currentDate.value).getTime() + 86400000
+          )
+          const d = `${date.getFullYear()}-${
+            date.getMonth() + 1
+          }-${date.getDate()}`
           currentDate.value = d
         }
       } else if (
@@ -348,7 +403,9 @@ export default defineComponent({
         )
       }
       currentTimestamp.value =
-        ((Math.abs(x) - infoWidth + mainRef.value.offsetWidth / 2) / infoWidth) * 86400000
+        ((Math.abs(x) - infoWidth + mainRef.value.offsetWidth / 2) /
+          infoWidth) *
+        86400000
       currentTimestamp.value = timeLimit(currentTimestamp.value)
       currentTime.value = formatTime(currentTimestamp.value)
       left.value = x
@@ -363,14 +420,17 @@ export default defineComponent({
     const up = () => {
       setTimeout(() => {
         if (isMove) {
-          updateTime({ date: currentDate.value, time: currentTime.value }, 'change')
+          updateTime(
+            { date: currentDate.value, time: currentTime.value },
+            'change'
+          )
         }
         isMove = false
       }, 0)
       window.removeEventListener('mousemove', move)
     }
 
-    const wheel = e => {
+    const wheel = (e) => {
       if (e.wheelDelta > 0) {
         // 缩小刻度
         if (proportion > 90) {
@@ -430,7 +490,7 @@ export default defineComponent({
       location()
     }
 
-    const jump = async e => {
+    const jump = async (e) => {
       if (isMove) return
       if (e?.pageX !== undefined) {
         const rect = mainRef.value.getBoundingClientRect()
@@ -447,38 +507,46 @@ export default defineComponent({
       if (infinite.value) {
         location()
         if (currentTimestamp.value < 0) {
-          const date = new Date(new Date(currentDate.value).getTime() - 86400000)
-          const d = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+          const date = new Date(
+            new Date(currentDate.value).getTime() - 86400000
+          )
+          const d = `${date.getFullYear()}-${
+            date.getMonth() + 1
+          }-${date.getDate()}`
           currentDate.value = d
           let step = Math.abs(currentTimestamp.value)
           initAxis({
             ld: step,
-            rd: 0,
+            rd: 0
           })
         } else {
           if (currentTimestamp.value > 86400000) {
-            const date = new Date(new Date(currentDate.value).getTime() + 86400000)
-            const d = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+            const date = new Date(
+              new Date(currentDate.value).getTime() + 86400000
+            )
+            const d = `${date.getFullYear()}-${
+              date.getMonth() + 1
+            }-${date.getDate()}`
             currentDate.value = d
           }
           initAxis({
             ld: 0,
-            rd: 0,
+            rd: 0
           })
         }
         currentTimestamp.value = timeLimit(currentTimestamp.value)
         currentTime.value = formatTime(currentTimestamp.value)
-        axisRef.value.style.transition = 'left 0.3s'
-        await new Promise(resolve => {
+        axisRef.value.style.transitionProperty = 'left'
+        await new Promise((resolve) => {
           setTimeout(() => {
-            axisRef.value.style.transition = 'none'
+            axisRef.value.style.transitionProperty = 'background-color'
             resolve()
           }, 300)
         })
       } else {
-        axisRef.value.style.transition = 'left 0.3s'
+        axisRef.value.style.transitionProperty = 'left'
         setTimeout(() => {
-          axisRef.value.style.transition = 'none'
+          axisRef.value.style.transitionProperty = 'background-color'
         }, 300)
       }
       currentTimestamp.value = timeLimit(currentTimestamp.value)
@@ -488,7 +556,7 @@ export default defineComponent({
       updateTime({ date: currentDate.value, time: currentTime.value }, 'change')
     }
 
-    const keydown = e => {
+    const keydown = (e) => {
       switch (e.keyCode) {
         case 37:
           // 左方向
@@ -509,29 +577,35 @@ export default defineComponent({
         case 107:
           //  放大
           wheel({
-            wheelDelta: 1,
+            wheelDelta: 1
           })
           break
         case 109:
           //  缩小
           wheel({
-            wheelDelta: -1,
+            wheelDelta: -1
           })
           break
       }
     }
 
-    const keyup = e => {
+    const keyup = (e) => {
       if (e.keyCode == 37 || e.keyCode == 39) {
         clearTimeout(timer)
-        updateTime({ date: currentDate.value, time: currentTime.value }, 'input')
+        updateTime(
+          { date: currentDate.value, time: currentTime.value },
+          'input'
+        )
         timer = setTimeout(() => {
-          updateTime({ date: currentDate.value, time: currentTime.value }, 'change')
+          updateTime(
+            { date: currentDate.value, time: currentTime.value },
+            'change'
+          )
         }, 300)
       }
     }
 
-    const calibration = timestamp => {
+    const calibration = (timestamp) => {
       if (timestamp >= 86400000) return 86400000
       const h = Math.floor((timestamp / 1000 / 60 / 60) % 24) * 1000 * 60 * 60
       const m = Math.floor((timestamp / 1000 / 60) % 60) * 1000 * 60
@@ -562,18 +636,25 @@ export default defineComponent({
           ? maxTime.value
           : timestamp
       } else if (type == 'boolean') {
-        return timestamp < minTime.value ? false : timestamp > maxTime.value ? false : true
+        return timestamp < minTime.value
+          ? false
+          : timestamp > maxTime.value
+          ? false
+          : true
       }
     }
 
-    const getTimestampLimit = delay => {
+    const getTimestampLimit = (delay) => {
       const x =
         (currentTimestamp.value / 86400000) * infoWidth +
         infoWidth / 2 -
         mainRef.value.offsetWidth / 2
-      let min = ((Math.abs(x) + infoWidth / 2) / infoWidth) * 86400000 - delay.ld * 2
+      let min =
+        ((Math.abs(x) + infoWidth / 2) / infoWidth) * 86400000 - delay.ld * 2
       let max =
-        ((Math.abs(x) + infoWidth / 2 + mainRef.value.offsetWidth) / infoWidth) * 86400000 +
+        ((Math.abs(x) + infoWidth / 2 + mainRef.value.offsetWidth) /
+          infoWidth) *
+          86400000 +
         delay.rd * 2
       min = parseInt(min / 1000 / 60 / 60) * 1000 * 60 * 60
       if (zoom == 120 * (120 / 120)) {
@@ -582,22 +663,30 @@ export default defineComponent({
         }
       } else if (zoom == 120 * (120 / 90)) {
         if ((min / 1000 / 60 / 60) % 3 !== 0) {
-          min = (min / 1000 / 60 / 60 - ((min / 1000 / 60 / 60) % 3)) * 1000 * 60 * 60
+          min =
+            (min / 1000 / 60 / 60 - ((min / 1000 / 60 / 60) % 3)) *
+            1000 *
+            60 *
+            60
         }
       } else if (zoom == 120 * (120 / 45)) {
         if ((min / 1000 / 60 / 60) % 3 !== 0) {
-          min = (min / 1000 / 60 / 60 - ((min / 1000 / 60 / 60) % 6)) * 1000 * 60 * 60
+          min =
+            (min / 1000 / 60 / 60 - ((min / 1000 / 60 / 60) % 6)) *
+            1000 *
+            60 *
+            60
         }
       }
 
       return {
         min,
-        max,
+        max
       }
     }
 
     expose({
-      jump,
+      jump
     })
 
     return {
@@ -614,8 +703,8 @@ export default defineComponent({
       jump,
       axisRef,
       mainRef,
-      time,
+      time
     }
-  },
+  }
 })
 </script>

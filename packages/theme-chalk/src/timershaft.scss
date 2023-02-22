@@ -124,7 +124,7 @@
 @include m.b('timershaft', 'small') {
   @include var.set_css_var(
     (
-      timershaft-height: f.get_css_var('small-timershaft-height'),
+      timershaft-height: f.get_css_var('small-timershaft-height')
     )
   );
   @include m.b('timershaft', 'currenttime') {
@@ -148,7 +148,7 @@
 @include m.b('timershaft', 'large') {
   @include var.set_css_var(
     (
-      timershaft-height: f.get_css_var('large-timershaft-height'),
+      timershaft-height: f.get_css_var('large-timershaft-height')
     )
   );
   @include m.b('timershaft', 'currenttime') {
